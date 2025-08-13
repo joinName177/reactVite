@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './styles/App.less'
-
+import { useEffect, useState } from 'react'
+import '@/styles/index.less'
 function App() {
   const [count, setCount] = useState(0)
-
+  useEffect(() => {
+    console.log('count', count)
+    console.log('VITE_API_BASE_URL', import.meta.env.VITE_API_BASE_URL)
+    console.log('VITE_APP_TITLE', import.meta.env.VITE_APP_TITLE)
+    console.log('VITE_APP_ENV', import.meta.env.VITE_APP_ENV)
+  }, [])
   return (
     <div className="app">
       <header className="app-header">
