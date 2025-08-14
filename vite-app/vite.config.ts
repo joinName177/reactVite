@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
         less: {
           javascriptEnabled: true,
           // 可以在这里添加全局Less变量
-          // additionalData: `@import "@/styles/variables.less";`
+          additionalData: `@import "@/styles/variables.less";`
         }
       }
     },

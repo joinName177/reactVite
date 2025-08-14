@@ -1,0 +1,72 @@
+// 通用组件样式
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f5f5f5;
+}
+
+.card-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+  overflow: hidden;
+
+  .ant-card-head {
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+  }
+
+  .ant-card-body {
+    padding: 20px;
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .ant-btn {
+    flex-shrink: 0;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.mb-24 {
+  margin-bottom: 24px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mt-24 {
+  margin-top: 24px;
+}
+
+// 响应式工具类
+@media (max-width: @screen-sm) {
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+
+    .ant-btn {
+      width: 100%;
+    }
+  }
+} 

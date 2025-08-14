@@ -24,4 +24,42 @@
 @screen-md: 768px;
 @screen-lg: 992px;
 @screen-xl: 1200px;
-@screen-xxl: 1600px; 
+@screen-xxl: 1600px;
+
+.common-button {
+  background-color: @primary-color;
+  color: white;
+  border: none;
+  padding: @spacing-sm @spacing-md;
+  border-radius: @border-radius-sm;
+  cursor: pointer;
+  font-size: @font-size-base;
+
+  &:hover {
+    background-color: darken(@primary-color, 10%);
+  }
+
+  &.success {
+    background-color: @success-color;
+
+    &:hover {
+      background-color: darken(@success-color, 10%);
+    }
+  }
+
+  &.warning {
+    background-color: @warning-color;
+
+    &:hover {
+      background-color: darken(@warning-color, 10%);
+    }
+  }
+
+  &.error {
+    background-color: @error-color;
+
+    &:hover {
+      background-color: darken(@error-color, 10%);
+    }
+  }
+}

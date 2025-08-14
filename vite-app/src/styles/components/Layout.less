@@ -1,0 +1,126 @@
+// 布局组件样式
+.app-layout {
+  // min-height: 100vh;
+  height: 100%;
+  width: 100%;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+
+  .app-logo {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 48px;
+  }
+
+  .app-menu {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .user-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .welcome-text {
+      color: white;
+      margin-right: 16px;
+    }
+
+    .logout-button {
+      color: white;
+      border: none;
+      background: transparent;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .login-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+    }
+  }
+}
+
+.app-content {
+  padding: 24px;
+  background: #f0f2f5;
+  overflow: auto;
+  .content-container {
+    background: white;
+    min-height: 280px;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.app-footer {
+  text-align: center;
+  color: #666;
+  background: #f0f2f5;
+  border-top: 1px solid #e8e8e8;
+}
+
+// 响应式设计
+@media (max-width: @screen-md) {
+  .app-header {
+    padding: 0 16px;
+
+    .app-logo {
+      margin-right: 24px;
+      font-size: 16px;
+    }
+
+    .user-actions {
+      .welcome-text {
+        display: none;
+      }
+    }
+  }
+
+  .app-content {
+    padding: 16px;
+
+    .content-container {
+      padding: 16px;
+    }
+  }
+}
+
+@media (max-width: @screen-sm) {
+  .app-header {
+    flex-direction: column;
+    padding: 16px;
+
+    .app-logo {
+      margin-right: 0;
+      margin-bottom: 16px;
+    }
+
+    .app-menu {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .user-actions {
+      margin-left: 0;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+} 

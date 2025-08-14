@@ -1,0 +1,88 @@
+// 首页样式
+.home-container {
+  padding: 24px;
+}
+
+.welcome-section {
+  margin-bottom: 32px;
+
+  .welcome-title {
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .welcome-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .welcome-actions {
+    .ant-btn {
+      margin-right: 12px;
+      height: 40px;
+      border-radius: 6px;
+      font-weight: 500;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.section-divider {
+  margin: 32px 0;
+  border-color: #e8e8e8;
+}
+
+.section-title {
+  margin-bottom: 16px;
+  color: #333;
+  font-weight: 600;
+}
+
+.section-description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+// 响应式设计
+@media (max-width: @screen-md) {
+  .home-container {
+    padding: 16px;
+  }
+
+  .welcome-section {
+    margin-bottom: 24px;
+
+    .welcome-actions {
+      .ant-btn {
+        margin-bottom: 12px;
+        width: 100%;
+        margin-right: 0;
+      }
+    }
+  }
+
+  .section-divider {
+    margin: 24px 0;
+  }
+}
+
+@media (max-width: @screen-sm) {
+  .home-container {
+    padding: 12px;
+  }
+
+  .welcome-section {
+    .welcome-title {
+      font-size: 20px;
+    }
+
+    .welcome-description {
+      font-size: 14px;
+    }
+  }
+} 

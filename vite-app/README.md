@@ -1,69 +1,85 @@
-# React + TypeScript + Vite
+# React + Vite + TypeScript + Ant Design 项目
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+这是一个使用现代技术栈构建的 React 应用程序。
 
-Currently, two official plugins are available:
+## 功能特性
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🚀 基于 Vite 的快速开发体验
+- ⚛️ React 19 + TypeScript 支持
+- 🎨 Ant Design 5.x 组件库
+- 🛣️ React Router 7 路由管理
+- 🔄 Redux Toolkit 状态管理
+- 📱 响应式设计
 
-## Expanding the ESLint configuration
+## 登录功能
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 演示账号
+- **用户名**: `admin`
+- **密码**: `123456`
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 功能说明
+1. 访问 `/login` 路径进入登录页面
+2. 使用演示账号登录
+3. 登录成功后自动跳转到首页
+4. 未登录用户访问受保护页面会自动重定向到登录页
+5. 可以通过右上角的"退出登录"按钮退出
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### 路由保护
+- 首页 (`/`)
+- 关于页面 (`/about`)
+- 联系页面 (`/contact`)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+这些页面都需要登录后才能访问。
+
+### Redux 状态管理
+- 用户登录状态和用户信息存储在 Redux store 中
+- 支持页面刷新后状态持久化（通过 localStorage）
+- 提供完整的用户状态管理（登录、退出、错误处理等）
+- 可以在首页查看 Redux 状态管理示例
+
+## 开发
+
+```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
+
+# 预览构建结果
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 项目结构
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/          # 组件
+│   ├── Layout.tsx      # 主布局组件
+│   ├── ProtectedRoute.tsx # 路由保护组件
+│   └── ...
+├── pages/              # 页面
+│   ├── Home.tsx        # 首页
+│   ├── Login.tsx       # 登录页
+│   ├── About.tsx       # 关于页
+│   ├── Contact.tsx     # 联系页
+│   └── NotFound.tsx    # 404页面
+├── router/             # 路由配置
+│   └── index.tsx
+├── store/              # Redux 状态管理
+├── styles/             # 样式文件
+└── main.tsx            # 应用入口
+```
+
+## 技术栈
+
+- **前端框架**: React 19
+- **构建工具**: Vite 7
+- **语言**: TypeScript 5.8
+- **UI 组件库**: Ant Design 5.27
+- **路由**: React Router 7
+- **状态管理**: Redux Toolkit
+- **样式**: CSS-in-JS + Less
