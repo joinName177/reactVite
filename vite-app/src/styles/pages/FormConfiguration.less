@@ -1,0 +1,74 @@
+.content-container {
+  .h100;
+   padding: 0 !important;
+  .left-container {
+    width: 240px;
+    border-right: 1px solid @border-color;
+    .left-content{
+      overflow: hidden;
+      padding-left: 16px;
+      padding-bottom: 16px;
+      &:hover{
+        .overflow-overlay;
+      }
+      .left-content-item{
+        width:94px ;
+        height: 94px;
+        border: 1px solid @border-color;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          border-color: #1890ff;
+          box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+        }
+        
+        &.cursor-move {
+          cursor: move;
+        }
+        
+        .form-icon{
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+  
+  .right-container {
+    .right-content {
+      overflow: hidden;
+      &:hover{
+        .overflow-overlay;
+      }
+      .droppable-area {
+        transition: all 0.2s ease;
+        
+        &.border-blue-500 {
+          border-color: #1890ff !important;
+          background-color: rgba(24, 144, 255, 0.05) !important;
+        }
+      }
+      
+      .form-field-item {
+        transition: all 0.2s ease;
+        
+        &:hover {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        button {
+          transition: all 0.2s ease;
+          
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+  }
+}

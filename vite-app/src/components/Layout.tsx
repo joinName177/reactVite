@@ -7,6 +7,7 @@ import {
   ContactsOutlined,
   LoginOutlined,
   LogoutOutlined,
+  FormOutlined,
 } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { clearUser } from '../store/slices/userSlice';
@@ -40,6 +41,11 @@ const Layout: React.FC = () => {
       key: '/contact',
       icon: <ContactsOutlined />,
       label: '联系',
+    },
+    {
+      key: '/form-configuration',
+      icon: <FormOutlined />,
+      label: '表单配置',
     },
   ];
 

@@ -1,11 +1,19 @@
 // React import removed as it's not needed in this file
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Layout from '../components/Layout';
+/** 首页 */
 import Home from '../pages/Home';
+/** 关于 */
 import About from '../pages/About';
+/** 联系 */
 import Contact from '../pages/Contact';
+/** 登录 */
 import Login from '../pages/Login';
+/** 表单配置 */
+import FormConfiguration from '../pages/FormConfiguration';
+/** 404 */
 import NotFound from '../pages/NotFound';
+/** 受保护的路由 */
 import ProtectedRoute from '../components/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -24,7 +32,6 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-        // 二级路由配置
       },
       {
         path: 'about',
@@ -33,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: 'contact',
         element: <Contact />,
+      },
+      {
+        path: 'form-configuration',
+        element: <FormConfiguration />,
       },
       {
         path: '404',

@@ -1,0 +1,101 @@
+// DroppableArea 组件样式
+.droppable-area {
+  // 这些类在variables.less中没有定义，需要在这里实现
+  
+  // 边框样式
+  &.border-2 {
+    border-width: 2px;
+  }
+  
+  &.border-dashed {
+    border-style: dashed;
+  }
+  
+  &.rounded {
+    border-radius: 4px;
+  }
+  
+  // 背景色
+  &.bg-blue-50 {
+    background-color: #eff6ff;
+  }
+  
+  &.bg-white {
+    background-color: #ffffff;
+  }
+  
+  // 边框颜色
+  &.border-gray-300 {
+    border-color: #d1d5db;
+  }
+  
+  &.border-blue-500 {
+    border-color: #1890ff;
+  }
+  
+  // 文字样式
+  &.text-gray-500 {
+    color: #6b7280;
+  }
+  
+  &.text-red-500 {
+    color: #ef4444;
+  }
+  
+  &.text-sm {
+    font-size: 14px;
+  }
+  
+  // 间距
+  &.mt-8 {
+    margin-top: 32px;
+  }
+  
+  // 布局
+  &.space-y-4 {
+    > * + * {
+      margin-top: 16px;
+    }
+  }
+  
+  // 尺寸
+  &.w-5 {
+    width: 20px;
+  }
+  
+  &.h-5 {
+    height: 20px;
+  }
+  
+  // 悬停效果
+  &.hover\:text-red-700:hover {
+    color: #b91c1c;
+  }
+}
+
+// 表单字段项样式
+.form-field-item {
+  // 这些类在variables.less中没有定义，需要在这里实现
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  background-color: #ffffff;
+
+  .font-medium{
+    width: 60px;
+  }
+  
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// 字体权重
+.font-medium {
+  font-weight: 500;
+}
+
+// 悬停状态样式
+.hover\:text-red-700:hover {
+  color: #b91c1c;
+} 
