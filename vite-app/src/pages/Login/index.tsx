@@ -2,11 +2,11 @@ import React from 'react';
 import { Form, Input, Button, Card, Typography, message, Space } from 'antd';
 import { UserOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setUser, setLoading, setError, clearError } from '../store/slices/userSlice';
-import '../styles/pages/Login.less';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setUser, setLoading, setError, clearError } from '../../store/slices/userSlice';
+import '../../styles/pages/Login.less';
 import md5 from 'md5';
-import { UserApiService } from '../services/api';
+import { UserApiService } from '../../services/api';
 const { Title, Text } = Typography;
 
 interface LoginForm {

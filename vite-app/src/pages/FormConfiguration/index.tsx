@@ -1,10 +1,10 @@
-import "../styles/pages/FormConfiguration.less";
-import { formComponents } from "../components/FormConfiguration/config";
-import { getFormIconAsync } from "../utils/imageUtils";
+import "../../styles/pages/FormConfiguration.less";
+import { formComponents } from "./components/config";
+import { getFormIconAsync } from "../../utils/imageUtils";
 import { useState, useEffect } from "react";
-import type { DraggedItem, FormField } from "../components/FormConfiguration/model";
-import DraggableComponent from "../components/FormConfiguration/DraggableComponent";
-import DroppableArea from "../components/FormConfiguration/DroppableArea";
+import type { DraggedItem, FormField } from "./components/model";
+import DraggableComponent from "./components/DraggableComponent";
+import DroppableArea from "./components/DroppableArea";
 
 export default function FormConfiguration() {
   const [imageUrls, setImageUrls] = useState<{ [key: string]: string }>({});
@@ -27,7 +27,7 @@ export default function FormConfiguration() {
   }, []);
 
   // 处理拖拽放置
-  const handleDrop = (item: DraggedItem) => {
+  const handleDrop = (item: DraggedItem, insertIndex?: number) => {
     const newField: FormField = {
       id: `${item.componentType}_${Date.now()}`,
       type: item.type,
@@ -43,12 +43,33 @@ export default function FormConfiguration() {
         defaultValue: '',
       }
     };
-    setFormFields(prev => [...prev, newField]);
+    
+    if (insertIndex !== undefined) {
+      // 在指定位置插入
+      setFormFields(prev => {
+        const newFields = [...prev];
+        newFields.splice(insertIndex, 0, newField);
+        return newFields;
+      });
+    } else {
+      // 在末尾添加
+      setFormFields(prev => [...prev, newField]);
+    }
   };
 
   // 移除表单字段
   const removeField = (fieldId: string) => {
     setFormFields(prev => prev.filter(field => field.id !== fieldId));
+  };
+
+  // 重新排序表单字段
+  const reorderFields = (fromIndex: number, toIndex: number) => {
+    setFormFields(prev => {
+      const newFields = [...prev];
+      const [movedField] = newFields.splice(fromIndex, 1);
+      newFields.splice(toIndex, 0, movedField);
+      return newFields;
+    });
   };
 
   return (
@@ -78,6 +99,7 @@ export default function FormConfiguration() {
             onDrop={handleDrop} 
             formFields={formFields} 
             onRemoveField={removeField}
+            onReorderFields={reorderFields}
             imageUrls={imageUrls}
           />
         </div>

@@ -6,15 +6,18 @@ import Home from '../pages/Home';
 /** 关于 */
 import About from '../pages/About';
 /** 联系 */
-import Contact from '../pages/Contact';
+import Contact from '../pages/Contact/index';
 /** 登录 */
 import Login from '../pages/Login';
 /** 表单配置 */
 import FormConfiguration from '../pages/FormConfiguration';
+/** 权限配置 */
+import PermissionConfiguration from '../pages/PermissionConfiguration';
 /** 404 */
-import NotFound from '../pages/NotFound';
+import NotFound from '../pages/404/NotFound';
 /** 受保护的路由 */
 import ProtectedRoute from '../components/ProtectedRoute';
+
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +47,10 @@ export const router = createBrowserRouter([
       {
         path: 'form-configuration',
         element: <FormConfiguration />,
+      },
+      {
+        path: 'permission-configuration',
+        element: <PermissionConfiguration />,
       },
       {
         path: '404',

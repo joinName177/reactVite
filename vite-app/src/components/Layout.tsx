@@ -8,6 +8,7 @@ import {
   LoginOutlined,
   LogoutOutlined,
   FormOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { clearUser } from '../store/slices/userSlice';
@@ -47,6 +48,11 @@ const Layout: React.FC = () => {
       icon: <FormOutlined />,
       label: '表单配置',
     },
+    {
+      key: '/permission-configuration',
+      icon: <UserOutlined />,
+      label: '权限配置',
+    },
   ];
 
   const handleMenuClick = ({ key }: { key: string }) => {
@@ -57,11 +63,11 @@ const Layout: React.FC = () => {
     <ConfigProvider
         theme={{
           token: {
-            colorPrimary: '#4caf50',
+            colorPrimary: '#2e7d32',
           },
           components: {
             Button: {
-              colorPrimary: '#4caf50',
+              colorPrimary: '#2e7d32',
             },
           },
         }}
@@ -113,8 +119,8 @@ const Layout: React.FC = () => {
         </div>
       </Content>
       
-      <Footer className="app-footer">
-        React App ©{new Date().getFullYear()} Created with ❤️
+      <Footer className="app-footer" style={{padding: 0}}>
+        {/* React App ©{new Date().getFullYear()} Created with ❤️ */}
       </Footer>
     </AntLayout>
     </ConfigProvider>

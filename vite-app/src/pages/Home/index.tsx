@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Card, Typography, Divider } from 'antd';
-import UserInfo from '../components/UserInfo';
-import Counter from '../components/Counter';
-import '../styles/pages/Home.less';
+import UserInfo from '../../components/UserInfo';
+import Counter from '../../components/Counter';
+import '../../styles/pages/Home.less';
 
 const { Title, Paragraph } = Typography;
 

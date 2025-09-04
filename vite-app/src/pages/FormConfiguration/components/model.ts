@@ -5,6 +5,21 @@ export interface DraggedItem {
   componentType: string;
 }
 
+// 表单字段拖拽项类型定义（用于排序）
+export interface FormFieldDragItem {
+  type: "FORM_FIELD_SORT";
+  fieldId: string;
+  index: number;
+}
+
+// 拖拽预览状态
+export interface DragPreviewState {
+  isDragging: boolean;
+  draggedItem?: DraggedItem | FormFieldDragItem;
+  insertIndex?: number;
+  isFromLeftPanel?: boolean;
+}
+
 // 表单字段类型定义
 export interface FormField {
   id: string;
