@@ -12,10 +12,10 @@ import { message } from "antd";
  */
 export class HttpClient {
   private instance: AxiosInstance;
-  private baseURL: string;
+  // private baseURL: string;
 
   constructor(baseURL: string = "", timeout: number = 10000) {
-    this.baseURL = baseURL;
+    // this.baseURL = baseURL;
     this.instance = axios.create({
       baseURL,
       timeout,
