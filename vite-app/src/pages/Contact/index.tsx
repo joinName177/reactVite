@@ -76,6 +76,7 @@ const Contact: React.FC = () => {
           </Form.Item>
         </Form>
       </Card>
+      
     </div>
   );
 };

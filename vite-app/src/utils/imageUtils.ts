@@ -63,3 +63,33 @@ export async function getImageAsync(category: string, filename: string, extensio
     return '';
   }
 } 
+
+/**
+ * 获取轮播图图片路径
+ * @param filename 文件名（不包含扩展名）
+ * @returns 图片路径
+ */
+export async function getCarouselImageAsync(filename: string): Promise<string> {
+  try {
+    const imageModule = await import(`../assets/images/carousel/${filename}.jpg`);
+    return imageModule.default;
+  } catch (error) {
+    console.warn(`Failed to load image for ${filename}.jpg:`, error);
+    return '';
+  }
+}
+
+/**
+ * 获取mp4视频路径
+ * @param filename 文件名（不包含扩展名）
+ * @returns 视频路径
+ */
+export async function getMp4VideoAsync(filename: string): Promise<string> {
+  try {
+    const videoModule = await import(`../assets/videos/${filename}.mp4`);
+    return videoModule.default;
+  } catch (error) {
+    console.warn(`Failed to load video for ${filename}.mp4:`, error);
+    return '';
+  }
+}
