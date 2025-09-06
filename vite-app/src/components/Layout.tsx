@@ -63,11 +63,11 @@ const Layout: React.FC = () => {
     <ConfigProvider
         theme={{
           token: {
-            colorPrimary: '#2e7d32',
+            colorPrimary: '#3949AB',
           },
           components: {
             Button: {
-              colorPrimary: '#2e7d32',
+              colorPrimary: '#3949AB',
             },
           },
         }}

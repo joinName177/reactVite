@@ -1,0 +1,11 @@
+.cell-required {
+  position: relative;
+  &::before {
+    content: '*';
+    position: absolute;
+    left: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #f50;
+  }
+}
