@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { Button, Input, Select, Switch, Table, Tag, Typography } from "antd";
+import { Button, Input, Select, Switch, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { AuthBlock } from "./model";
 import "./index.less";
@@ -62,9 +62,9 @@ const getAuthBlock = async (): Promise<AuthBlock[]> => {
 };
 
 // 使用 React.memo 优化单元格渲染
-const ModuleCell = React.memo(({ text, rowSpan }: { text: string; rowSpan: number }) => <span>{text}</span>);
+const ModuleCell = React.memo(({ text }: { text: string }) => <span>{text}</span>);
 
-const FunctionCell = React.memo(({ text, rowSpan }: { text: string; rowSpan: number }) => <span>{text}</span>);
+const FunctionCell = React.memo(({ text }: { text: string }) => <span>{text}</span>);
 
 const PermissionCell = React.memo(({ text, isEdit }: { text: string; isEdit: boolean }) => (isEdit ? <Input value={text} /> : <span>{text}</span>));
 
@@ -104,7 +104,7 @@ const AuthTable: React.FC = () => {
 
           const rowSpan = rowSpanInfo.moduleRowCounts[record.moduleId] || 1;
           return {
-            children: <ModuleCell text={text} rowSpan={rowSpan} />,
+            children: <ModuleCell text={text} />,
             props: { rowSpan }
           };
         }
@@ -125,7 +125,7 @@ const AuthTable: React.FC = () => {
           const rowSpan = rowSpanInfo.functionRowCounts[functionKey] || 1;
 
           return {
-            children: <FunctionCell text={text} rowSpan={rowSpan} />,
+            children: <FunctionCell text={text} />,
             props: { rowSpan }
           };
         }
@@ -156,7 +156,7 @@ const AuthTable: React.FC = () => {
         dataIndex: "dataCode",
         key: "dataCode",
         width: 100,
-        render: (code: number) => (
+        render: () => (
           <Select
             style={{
               width: 160

@@ -17,6 +17,8 @@ import PermissionConfiguration from '../pages/PermissionConfiguration';
 import NotFound from '../pages/404/NotFound';
 /** 受保护的路由 */
 import ProtectedRoute from '../components/ProtectedRoute';
+/** Home子页面 */
+import ExcelToImg from '../pages/Home/components/ExcelToImg';
 
 
 export const router = createBrowserRouter([
@@ -34,7 +36,25 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Navigate to="/home" replace />,
+      },
+      {
+        path: 'home',
         element: <Home />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/home/excelToImg" replace />,
+          },
+          {
+            path: 'excelToImg',
+            element: <ExcelToImg />,
+          },
+          {
+            path: 'imgToExcel',
+            element: <div>imgToExcel</div>,
+          },
+        ],
       },
       {
         path: 'about',

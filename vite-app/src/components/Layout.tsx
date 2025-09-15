@@ -75,7 +75,7 @@ const Layout: React.FC = () => {
     <AntLayout className="app-layout">
       <Header className="app-header">
         <div className="app-logo">
-          React App
+          MiniCar
         </div>
         <Menu
           theme="dark"

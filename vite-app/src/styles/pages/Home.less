@@ -1,119 +1,42 @@
-// 首页样式
+﻿// 首页样式
 .home-container {
-  height: 100%;
+  
+}
 
-  .home-left{
-    width: 240px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    span{
-      display: inline-flex;
-      width: 200px;
-      height: 42px;
-      background-color: #4caf50;
-      border-radius: 4px;
-      font-size: 20px;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 500;
-      cursor: pointer;
-      &:hover,&.active{
-        background-color: #000;
-      }
-    
-    }
+// Excel转换工具样式
+.excel-to-img-container {
+  position: relative;
+  
+  &:empty:before {
+    content: attr(data-placeholder);
+    color: #999;
+    font-style: italic;
+    pointer-events: none;
   }
-
-  .video-container{
-    // width: 100%;
-    height: 100%;
+  
+  &:focus {
+    border-color: #1890ff;
+    outline: none;
   }
 }
 
-.welcome-section {
-  margin-bottom: 32px;
-
-  .welcome-title {
-    margin-bottom: 16px;
-    color: #333;
+.excel-convert-result {
+  .result-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
-
-  .welcome-description {
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-
-  .welcome-actions {
-    .ant-btn {
-      margin-right: 12px;
-      height: 40px;
-      border-radius: 6px;
-      font-weight: 500;
-
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-  }
-}
-
-.section-divider {
-  margin: 32px 0;
-  border-color: #e8e8e8;
-}
-
-.section-title {
-  margin-bottom: 16px;
-  color: #333;
-  font-weight: 600;
-}
-
-.section-description {
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-// 响应式设计
-@media (max-width: @screen-md) {
-  // .home-container {
-  //   padding: 16px;
-  // }
-
-  .welcome-section {
-    margin-bottom: 24px;
-
-    .welcome-actions {
-      .ant-btn {
-        margin-bottom: 12px;
-        width: 100%;
-        margin-right: 0;
-      }
-    }
-  }
-
-  .section-divider {
-    margin: 24px 0;
-  }
-}
-
-@media (max-width: @screen-sm) {
-  // .home-container {
-  //   padding: 12px;
-  // }
-
-  .welcome-section {
-    .welcome-title {
-      font-size: 20px;
-    }
-
-    .welcome-description {
-      font-size: 14px;
-    }
+  
+  .result-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    background: #f5f5f5;
+    padding: 16px;
+    border-radius: 4px;
+    border: 1px solid #e8e8e8;
   }
 } 
