@@ -3,6 +3,8 @@ import Layout from '@/components/Layout';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Login from '@/pages/Login';
+import Approval from '@/pages/Approval';
+import Meeting from '@/pages/Meeting';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
 const router = createHashRouter([
@@ -27,6 +29,14 @@ const router = createHashRouter([
         element: <About />,
       },
     ],
+  },
+  {
+    path: '/approval',
+    element: <Approval />,
+  },
+  {
+    path: '/meeting',
+    element: <Meeting />,
   },
 ]);
 
