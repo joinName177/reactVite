@@ -9,6 +9,9 @@ import {
 } from './windowManager';
 
 let tray: Tray | null = null;
+let trayIcon: ReturnType<typeof nativeImage.createFromPath> | null = null; // 保存原始图标
+let blinkingInterval: NodeJS.Timeout | null = null; // 闪烁定时器
+let messages: Array<{ id: string; title: string; content: string; type: string; timestamp: number; read: boolean }> = [];
 
 /**
  * 创建系统托盘
@@ -86,6 +89,9 @@ export function createTray(): void {
       },
     ]);
 
+    // 保存原始图标
+    trayIcon = icon;
+
     tray.setToolTip('holder');
     tray.setContextMenu(contextMenu);
 
@@ -104,6 +110,11 @@ export function createTray(): void {
       }
     });
 
+    // 鼠标悬停时显示消息列表
+    tray.on('mouse-enter', () => {
+      updateTrayTooltip();
+    });
+
     console.log('[Tray] 系统托盘已创建');
   } catch (error) {
     console.error('[Tray] 创建系统托盘失败:', error);
@@ -111,12 +122,104 @@ export function createTray(): void {
 }
 
 /**
+ * 更新托盘提示信息（显示消息列表）
+ */
+function updateTrayTooltip(): void {
+  if (!tray) return;
+
+  const unreadCount = messages.filter((msg) => !msg.read).length;
+  
+  if (messages.length === 0) {
+    tray.setToolTip('holder\n暂无消息');
+    return;
+  }
+
+  // 构建工具提示文本
+  const tooltipLines = [
+    `holder (${unreadCount > 0 ? `${unreadCount}条未读` : '全部已读'})`,
+    '━━━━━━━━━━━━━━━━',
+  ];
+
+  // 显示最近5条消息
+  const recentMessages = messages.slice(0, 5);
+  recentMessages.forEach((msg, index) => {
+    const readMark = msg.read ? '✓' : '●';
+    const time = new Date(msg.timestamp).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    tooltipLines.push(`${readMark} [${time}] ${msg.title}`);
+  });
+
+  if (messages.length > 5) {
+    tooltipLines.push(`...还有 ${messages.length - 5} 条消息`);
+  }
+
+  tray.setToolTip(tooltipLines.join('\n'));
+}
+
+/**
+ * 更新托盘消息列表
+ */
+export function updateTrayMessages(newMessages: Array<{ id: string; title: string; content: string; type: string; timestamp: number; read: boolean }>): void {
+  messages = newMessages;
+  updateTrayTooltip();
+}
+
+/**
+ * 设置托盘闪烁
+ */
+export function setTrayBlinking(blinking: boolean): void {
+  if (!tray || !trayIcon) return;
+
+  // 清除现有闪烁定时器
+  if (blinkingInterval) {
+    clearInterval(blinkingInterval);
+    blinkingInterval = null;
+  }
+
+  if (!blinking) {
+    // 停止闪烁，恢复原始图标
+    tray.setImage(trayIcon);
+    return;
+  }
+
+  // 创建闪烁效果（交替显示图标和空图标）
+  let isVisible = true;
+  blinkingInterval = setInterval(() => {
+    if (!tray || !trayIcon) {
+      if (blinkingInterval) {
+        clearInterval(blinkingInterval);
+        blinkingInterval = null;
+      }
+      return;
+    }
+
+    if (isVisible) {
+      // 显示原始图标
+      tray.setImage(trayIcon);
+    } else {
+      // 创建半透明图标（闪烁效果）
+      const emptyIcon = nativeImage.createEmpty();
+      tray.setImage(emptyIcon);
+    }
+    isVisible = !isVisible;
+  }, 500); // 每500ms切换一次
+}
+
+/**
  * 销毁系统托盘
  */
 export function destroyTray(): void {
+  // 清除闪烁定时器
+  if (blinkingInterval) {
+    clearInterval(blinkingInterval);
+    blinkingInterval = null;
+  }
+
   if (tray) {
     tray.destroy();
     tray = null;
   }
+
+  trayIcon = null;
+  messages = [];
 }
 

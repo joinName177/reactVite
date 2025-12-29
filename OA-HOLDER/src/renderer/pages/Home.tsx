@@ -1,18 +1,36 @@
-import React from 'react';
-import { Card, Button, Space, Typography, Tag, Descriptions, Row, Col, Modal } from 'antd';
-import { CheckCircleOutlined, CalendarOutlined, LogoutOutlined } from '@ant-design/icons';
+import React, { useEffect } from 'react';
+import { Card, Button, Space, Typography, Tag, Descriptions, Row, Col, Modal, Badge } from 'antd';
+import { CheckCircleOutlined, CalendarOutlined, LogoutOutlined, BellOutlined, MessageOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { increment, decrement, incrementByAmount, reset } from '@/store/slices/counterSlice';
 import { clearToken } from '@/store/slices/loginSlice';
+import { addMessage, addMessages, clearAllMessages } from '@/store/slices/messageSlice';
 import envConfig, { isDevelopment, isRe, isProduction } from '@/config/env';
 
 const { Title, Text } = Typography;
 
 const Home: React.FC = () => {
   const count = useAppSelector((state) => state.counter.value);
+  const messages = useAppSelector((state) => state.message.messages);
+  const unreadCount = useAppSelector((state) => state.message.unreadCount);
+  const isBlinking = useAppSelector((state) => state.message.isBlinking);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  // 监听消息变化，同步到托盘
+  useEffect(() => {
+    if (window.electronAPI?.updateTrayMessages) {
+      window.electronAPI.updateTrayMessages(messages);
+    }
+  }, [messages]);
+
+  // 监听闪烁状态变化，同步到托盘
+  useEffect(() => {
+    if (window.electronAPI?.setTrayBlinking) {
+      window.electronAPI.setTrayBlinking(isBlinking);
+    }
+  }, [isBlinking]);
 
   const getEnvTagColor = () => {
     if (isDevelopment()) return 'blue';
@@ -68,6 +86,21 @@ const Home: React.FC = () => {
           console.error('关闭子窗口失败:', error);
         }
         
+        // 清空所有消息
+        dispatch(clearAllMessages());
+        
+        // 停止托盘闪烁并清空托盘消息
+        try {
+          if (window.electronAPI?.setTrayBlinking) {
+            await window.electronAPI.setTrayBlinking(false);
+          }
+          if (window.electronAPI?.updateTrayMessages) {
+            await window.electronAPI.updateTrayMessages([]);
+          }
+        } catch (error) {
+          console.error('清空托盘消息失败:', error);
+        }
+        
         // 清除登录状态
         dispatch(clearToken());
         // 跳转到登录页
@@ -76,20 +109,120 @@ const Home: React.FC = () => {
     });
   };
 
+  // 模拟添加单条消息
+  const handleAddSingleMessage = () => {
+    const types: Array<'info' | 'warning' | 'error' | 'success'> = ['info', 'warning', 'error', 'success'];
+    const randomType = types[Math.floor(Math.random() * types.length)];
+    const titles = {
+      info: '系统通知',
+      warning: '警告信息',
+      error: '错误提示',
+      success: '操作成功',
+    };
+    const contents = {
+      info: '这是一条普通通知消息',
+      warning: '请注意：这是一条警告消息',
+      error: '发生错误：这是一条错误消息',
+      success: '操作已成功完成',
+    };
+
+    dispatch(addMessage({
+      title: titles[randomType],
+      content: contents[randomType],
+      type: randomType,
+    }));
+  };
+
+  // 模拟添加多条消息
+  const handleAddMultipleMessages = () => {
+    const mockMessages = [
+      { title: '审批通知', content: '您有一条新的审批请求需要处理', type: 'info' as const },
+      { title: '会议提醒', content: '您有一个会议将在30分钟后开始', type: 'warning' as const },
+      { title: '系统更新', content: '系统已更新到最新版本', type: 'success' as const },
+      { title: '错误提示', content: '网络连接异常，请检查网络设置', type: 'error' as const },
+      { title: '待办事项', content: '您有3个待办事项需要处理', type: 'info' as const },
+    ];
+    dispatch(addMessages(mockMessages));
+  };
+
   return (
     <Card>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <Title level={2} style={{ margin: 0 }}>首页</Title>
-        <Button
-          type="primary"
-          danger
-          icon={<LogoutOutlined />}
-          onClick={handleLogout}
-        >
-          退出登录
-        </Button>
+        <Space>
+          <Badge count={unreadCount} size="small">
+            <Button
+              icon={<BellOutlined />}
+              onClick={handleAddSingleMessage}
+            >
+              添加消息
+            </Button>
+          </Badge>
+          <Button
+            icon={<MessageOutlined />}
+            onClick={handleAddMultipleMessages}
+          >
+            批量添加消息
+          </Button>
+          <Button
+            type="primary"
+            danger
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+          >
+            退出登录
+          </Button>
+        </Space>
       </div>
       <Space orientation="vertical" size="large" style={{ width: '100%' }}>
+        {/* 消息统计 */}
+        {messages.length > 0 && (
+          <Card size="small" title={`消息列表 (${unreadCount} 条未读)`}>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              {messages.slice(0, 5).map((msg) => (
+                <Card
+                  key={msg.id}
+                  size="small"
+                  style={{
+                    backgroundColor: msg.read ? '#f5f5f5' : '#fff',
+                    borderLeft: `4px solid ${
+                      msg.type === 'error' ? '#ff4d4f' :
+                      msg.type === 'warning' ? '#faad14' :
+                      msg.type === 'success' ? '#52c41a' : '#1890ff'
+                    }`,
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                    <div style={{ flex: 1 }}>
+                      <Typography.Text strong={!msg.read}>
+                        {msg.title}
+                      </Typography.Text>
+                      <div style={{ marginTop: 4, color: '#666', fontSize: '12px' }}>
+                        {msg.content}
+                      </div>
+                      <div style={{ marginTop: 4, color: '#999', fontSize: '12px' }}>
+                        {new Date(msg.timestamp).toLocaleString('zh-CN')}
+                      </div>
+                    </div>
+                    <Tag color={
+                      msg.type === 'error' ? 'red' :
+                      msg.type === 'warning' ? 'orange' :
+                      msg.type === 'success' ? 'green' : 'blue'
+                    }>
+                      {msg.type}
+                    </Tag>
+                  </div>
+                </Card>
+              ))}
+              {messages.length > 5 && (
+                <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
+                  还有 {messages.length - 5} 条消息...
+                </Typography.Text>
+              )}
+            </Space>
+          </Card>
+        )}
+
         {/* 快捷入口 */}
         <Card size="small" title="快捷入口">
           <Row gutter={[16, 16]}>

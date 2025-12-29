@@ -13,5 +13,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // 关闭所有子窗口
   closeAllChildWindows: () => ipcRenderer.invoke('close-all-child-windows'),
+  
+  // 更新托盘消息列表
+  updateTrayMessages: (messages: any[]) => ipcRenderer.invoke('update-tray-messages', messages),
+  
+  // 设置托盘闪烁
+  setTrayBlinking: (blinking: boolean) => ipcRenderer.invoke('set-tray-blinking', blinking),
 });
 
