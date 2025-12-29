@@ -53,6 +53,16 @@ const Layout: React.FC = () => {
       icon: <UserOutlined />,
       label: '权限配置',
     },
+    {
+      key: '/tour',
+      icon: <UserOutlined />,
+      label: '漫游引导',
+    },
+    {
+      key: '/form',
+      icon: <FormOutlined />,
+      label: '表单',
+    },
   ];
 
   const handleMenuClick = ({ key }: { key: string }) => {

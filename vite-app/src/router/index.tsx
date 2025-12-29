@@ -19,8 +19,10 @@ import NotFound from '../pages/404/NotFound';
 import ProtectedRoute from '../components/ProtectedRoute';
 /** Home子页面 */
 import ExcelToImg from '../pages/Home/components/ExcelToImg';
-
-
+/**漫游引导 */
+import Tour from '../pages/Tour';
+/** 表单 */
+import Form from '../pages/Form';
 export const router = createBrowserRouter([
   {
     path: '/login',
@@ -71,6 +73,14 @@ export const router = createBrowserRouter([
       {
         path: 'permission-configuration',
         element: <PermissionConfiguration />,
+      },
+      {
+        path: 'tour',
+        element: <Tour />,
+      },
+      {
+        path: 'form',
+        element: <Form />,
       },
       {
         path: '404',

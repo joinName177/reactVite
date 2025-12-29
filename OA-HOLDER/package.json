@@ -1,0 +1,123 @@
+{
+  "name": "holder",
+  "version": "1.0.1",
+  "description": "Electron + React + TypeScript + Ant Design 桌面应用",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "dev": "npm run build:electron && concurrently \"npm run dev:renderer\" \"npm run dev:electron:watch\" \"wait-on http://localhost:5173 -t 30000 && npm run dev:electron:start\"",
+    "dev:renderer": "vite --mode development",
+    "dev:electron:watch": "tsc -p tsconfig.node.json --watch",
+    "dev:electron:start": "cross-env NODE_ENV=development electron .",
+    "dev:electron": "npm run build:electron && cross-env NODE_ENV=development electron .",
+    "build": "npm run build:renderer && npm run build:electron",
+    "build:renderer": "vite build --mode production",
+    "build:re": "npm run build:renderer:re && npm run build:electron",
+    "build:renderer:re": "vite build --mode re",
+    "build:prod": "npm run build:renderer:prod && npm run build:electron",
+    "build:renderer:prod": "vite build --mode production",
+    "build:electron": "tsc -p tsconfig.node.json",
+    "preview": "vite preview",
+    "pack": "node scripts/build-with-version.js",
+    "dist": "npm run build:prod && node scripts/build-with-version.js",
+    "dist:re": "npm run build:re && node scripts/build-with-version.js",
+    "dist:win32": "npm run build:prod && node scripts/build-with-version.js --win --ia32",
+    "dist:win64": "npm run build:prod && node scripts/build-with-version.js --win --x64",
+    "dist:win": "npm run build:prod && node scripts/build-with-version.js --win --x64 --ia32",
+    "dist:re:win32": "npm run build:re && node scripts/build-with-version.js --win --ia32",
+    "dist:re:win64": "npm run build:re && node scripts/build-with-version.js --win --x64",
+    "dist:re:win": "npm run build:re && node scripts/build-with-version.js --win --x64 --ia32"
+  },
+  "keywords": [
+    "electron",
+    "react",
+    "typescript",
+    "antd"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ant-design/icons": "^6.1.0",
+    "@reduxjs/toolkit": "^2.11.2",
+    "antd": "^6.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-router-dom": "^5.3.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
+    "less": "^4.5.1",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1",
+    "wait-on": "^9.0.3"
+  },
+  "build": {
+    "appId": "com.yourcompany.holder",
+    "productName": "holder",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "holder",
+      "installerLanguages": [
+        "zh_CN",
+        "en_US"
+      ],
+      "displayLanguageSelector": false,
+      "multiLanguageInstaller": false,
+      "runAfterFinish": true,
+      "menuCategory": false
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
+  },
+  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
+}

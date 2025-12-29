@@ -181,6 +181,7 @@ const AuthTable: React.FC = () => {
     () => ({
       bordered: true,
       size: "middle" as const,
+      // virtual: true,
       scroll: { x: 1000, y: 600 } // 设置固定高度启用虚拟滚动
     }),
     []
