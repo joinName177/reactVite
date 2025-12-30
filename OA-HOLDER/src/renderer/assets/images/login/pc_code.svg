@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="82px" height="78px" viewBox="0 0 82 78" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>computer</title>
+    <defs>
+        <path d="M0,0 L76,0 C79.3137085,-6.08718376e-16 82,2.6862915 82,6 L82,78 L82,78 L0,0 Z" id="path-1"></path>
+    </defs>
+    <g id="登录/创建团队流程" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="3登录页-扫码登录" transform="translate(-1378.000000, -265.000000)">
+            <g id="账号" transform="translate(1378.000000, 265.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="蒙版" fill="#E7F0FF" xlink:href="#path-1"></use>
+                <g id="账号登录" mask="url(#mask-2)" stroke="#6475D8" stroke-width="2.125">
+                    <g transform="translate(30.125000, 21.062500)">
+                        <rect id="矩形" x="0" y="0" width="30.8125" height="19.125" rx="2.125"></rect>
+                        <line x1="24.4375" y1="24.4375" x2="6.375" y2="24.4375" id="路径-8" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="30.36625" y1="14.875" x2="0.612208511" y2="14.875" id="路径-8备份" stroke-linejoin="round"></line>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

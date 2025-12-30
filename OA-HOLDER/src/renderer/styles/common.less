@@ -1,0 +1,343 @@
+// 公共样式工具类 - Flex 布局
+
+// ==================== Flex 容器基础 ====================
+.flex {
+  display: flex;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+// ==================== Flex 方向 ====================
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-column-reverse {
+  flex-direction: column-reverse;
+}
+
+// ==================== Flex Wrap ====================
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+// ==================== Justify Content (主轴对齐) ====================
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+// ==================== Align Items (交叉轴对齐) ====================
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-baseline {
+  align-items: baseline;
+}
+
+.items-stretch {
+  align-items: stretch;
+}
+
+// ==================== Align Content (多行对齐) ====================
+.content-start {
+  align-content: flex-start;
+}
+
+.content-end {
+  align-content: flex-end;
+}
+
+.content-center {
+  align-content: center;
+}
+
+.content-between {
+  align-content: space-between;
+}
+
+.content-around {
+  align-content: space-around;
+}
+
+.content-stretch {
+  align-content: stretch;
+}
+
+// ==================== Align Self (单个项目对齐) ====================
+.self-auto {
+  align-self: auto;
+}
+
+.self-start {
+  align-self: flex-start;
+}
+
+.self-end {
+  align-self: flex-end;
+}
+
+.self-center {
+  align-self: center;
+}
+
+.self-baseline {
+  align-self: baseline;
+}
+
+.self-stretch {
+  align-self: stretch;
+}
+
+// ==================== Flex Grow ====================
+.flex-grow-0 {
+  flex-grow: 0;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+// ==================== Flex Shrink ====================
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.flex-shrink-1 {
+  flex-shrink: 1;
+}
+
+// ==================== Flex Basis ====================
+.flex-basis-auto {
+  flex-basis: auto;
+}
+
+.flex-basis-0 {
+  flex-basis: 0;
+}
+
+// ==================== Flex 简写属性 ====================
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.flex-auto {
+  flex: 1 1 auto;
+}
+
+.flex-none {
+  flex: none;
+}
+
+// ==================== 常用组合类 ====================
+// 水平居中
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// 水平居中（仅主轴）
+.flex-center-x {
+  display: flex;
+  justify-content: center;
+}
+
+// 垂直居中（仅交叉轴）
+.flex-center-y {
+  display: flex;
+  align-items: center;
+}
+
+// 两端对齐
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// 两端对齐（垂直方向）
+.flex-between-y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+// 均匀分布
+.flex-around {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+// 垂直布局居中
+.flex-column-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+// 垂直布局两端对齐
+.flex-column-between {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+// 垂直布局均匀分布
+.flex-column-around {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+// ==================== Gap 间距 ====================
+.gap-0 {
+  gap: 0;
+}
+
+.gap-4 {
+  gap: 4px;
+}
+
+.gap-8 {
+  gap: 8px;
+}
+
+.gap-12 {
+  gap: 12px;
+}
+
+.gap-16 {
+  gap: 16px;
+}
+
+.gap-20 {
+  gap: 20px;
+}
+
+.gap-24 {
+  gap: 24px;
+}
+
+.gap-32 {
+  gap: 32px;
+}
+
+// 行间距
+.row-gap-0 {
+  row-gap: 0;
+}
+
+.row-gap-4 {
+  row-gap: 4px;
+}
+
+.row-gap-8 {
+  row-gap: 8px;
+}
+
+.row-gap-12 {
+  row-gap: 12px;
+}
+
+.row-gap-16 {
+  row-gap: 16px;
+}
+
+.row-gap-20 {
+  row-gap: 20px;
+}
+
+.row-gap-24 {
+  row-gap: 24px;
+}
+
+.row-gap-32 {
+  row-gap: 32px;
+}
+
+// 列间距
+.column-gap-0 {
+  column-gap: 0;
+}
+
+.column-gap-4 {
+  column-gap: 4px;
+}
+
+.column-gap-8 {
+  column-gap: 8px;
+}
+
+.column-gap-12 {
+  column-gap: 12px;
+}
+
+.column-gap-16 {
+  column-gap: 16px;
+}
+
+.column-gap-20 {
+  column-gap: 20px;
+}
+
+.column-gap-24 {
+  column-gap: 24px;
+}
+
+.column-gap-32 {
+  column-gap: 32px;
+}
+
+.full-screen {
+  width: 100%;
+  height: 100%;
+}

@@ -23,7 +23,8 @@
       "@/*": ["src/renderer/*"]
     }
   },
-  "include": ["src/renderer"],
+  "include": ["src/renderer/**/*.ts", "src/renderer/**/*.tsx"],
+  "exclude": ["node_modules", "dist"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
 
