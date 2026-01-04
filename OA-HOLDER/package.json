@@ -1,6 +1,7 @@
 {
   "name": "holder",
   "version": "1.0.1",
+  "appId": "com.hes.holder.electron-oa",
   "description": "Electron + React + TypeScript + Ant Design 桌面应用",
   "main": "dist/main/index.js",
   "scripts": {
@@ -27,18 +28,14 @@
     "dist:re:win64": "npm run build:re && node scripts/build-with-version.js --win --x64",
     "dist:re:win": "npm run build:re && node scripts/build-with-version.js --win --x64 --ia32"
   },
-  "keywords": [
-    "electron",
-    "react",
-    "typescript",
-    "antd"
-  ],
+  "keywords": ["electron", "react", "typescript", "antd"],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
     "@reduxjs/toolkit": "^2.11.2",
     "antd": "^6.1.1",
+    "axios": "^1.13.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-redux": "^9.2.0",
@@ -65,25 +62,16 @@
     "directories": {
       "output": "release"
     },
-    "files": [
-      "dist/**/*",
-      "package.json"
-    ],
+    "files": ["dist/**/*", "package.json"],
     "win": {
       "target": [
         {
           "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
+          "arch": ["x64", "ia32"]
         },
         {
           "target": "portable",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
+          "arch": ["x64", "ia32"]
         }
       ],
       "icon": "build/icon.ico"
@@ -98,25 +86,17 @@
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
       "shortcutName": "holder",
-      "installerLanguages": [
-        "zh_CN",
-        "en_US"
-      ],
+      "installerLanguages": ["zh_CN", "en_US"],
       "displayLanguageSelector": false,
       "multiLanguageInstaller": false,
       "runAfterFinish": true,
       "menuCategory": false
     },
     "mac": {
-      "target": [
-        "dmg"
-      ]
+      "target": ["dmg"]
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
+      "target": ["AppImage", "deb"]
     }
   },
   "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"

@@ -16,6 +16,14 @@
   min-height: 100vh;
   position: relative;
 
+  &-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: @text-color-dark !important;
+    margin-bottom: 36px;
+    display: block;
+  }
+
   .holder_logo_bg {
     width: 284px;
     height: 188px;
@@ -233,20 +241,54 @@
     top: 0;
     cursor: pointer;
   }
+
+  .forgot-password-container {
+    width: 330px;
+    margin: 0 auto;
+    .login-page-title {
+      margin: 0;
+    }
+    .forgot-password-title {
+      gap: 17px;
+      margin-bottom: 36px;
+      .forgot-password-title-icon {
+        width: 34px;
+        height: 34px;
+        box-shadow: 0px 0px 7px 0px #e4e8ee;
+        border-radius: 50%;
+        cursor: pointer;
+        .back-icon {
+          width: 29px;
+          height: 28px;
+          background-image: url('@/assets/icons/icon-back.png');
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          cursor: pointer;
+        }
+        &:hover {
+          .back-icon {
+            background-image: url('@/assets/icons/icon-back-hover.png');
+          }
+        }
+      }
+    }
+
+    // 修改禁用按钮的样式
+    .send-code-btn {
+      &:disabled {
+        background-color: #a5a6abd9;
+        color: #ffffff;
+        border: none;
+        box-shadow: none;
+      }
+    }
+  }
 }
 
 // ==================== 登录表单 ====================
 .login-form {
   width: 330px;
   margin: 0 auto;
-
-  &-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: @text-color-dark !important;
-    margin-bottom: 36px;
-    display: block;
-  }
 
   &-content {
     .ant-form-item {
@@ -260,7 +302,7 @@
         margin-bottom: 10px;
       }
 
-      .ant-form-item-explain-error{
+      .ant-form-item-explain-error {
         font-size: @font-size-base;
       }
     }
