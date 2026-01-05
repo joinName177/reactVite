@@ -23,6 +23,8 @@ import ExcelToImg from '../pages/Home/components/ExcelToImg';
 import Tour from '../pages/Tour';
 /** 表单 */
 import Form from '../pages/Form';
+/** 通知演示 */
+import NotificationDemo from '../pages/NotificationDemo';
 export const router = createBrowserRouter([
   {
     path: '/login',
@@ -81,6 +83,10 @@ export const router = createBrowserRouter([
       {
         path: 'form',
         element: <Form />,
+      },
+      {
+        path: 'notification-demo',
+        element: <NotificationDemo />,
       },
       {
         path: '404',

@@ -9,6 +9,7 @@ import {
   LogoutOutlined,
   FormOutlined,
   UserOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { clearUser } from '../store/slices/userSlice';
@@ -62,6 +63,11 @@ const Layout: React.FC = () => {
       key: '/form',
       icon: <FormOutlined />,
       label: '表单',
+    },
+    {
+      key: '/notification-demo',
+      icon: <BellOutlined />,
+      label: '通知演示',
     },
   ];
 
