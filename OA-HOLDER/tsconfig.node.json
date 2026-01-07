@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "composite": true,
+    "incremental": true,
     "skipLibCheck": true,
     "module": "CommonJS",
     "moduleResolution": "node",
@@ -11,8 +12,8 @@
     "types": ["node"],
     "outDir": "dist/main",
     "rootDir": "src/main",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "tsBuildInfoFile": "dist/main/.tsbuildinfo"
   },
   "include": ["src/main"]
 }
-

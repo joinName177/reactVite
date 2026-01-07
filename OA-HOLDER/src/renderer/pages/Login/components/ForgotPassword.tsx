@@ -84,10 +84,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
         >
           <span className='back-icon'></span>
         </span>
-        <Text
-          className='login-page-title'
-          type='secondary'
-        >
+        <Text className='login-page-title' type='secondary'>
           忘记密码
         </Text>
       </div>
@@ -120,12 +117,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
           }}
         >
           <Input
-            prefix={
-              <img
-                src={userIcon}
-                alt='账号图标'
-              />
-            }
+            prefix={<img src={userIcon} alt='账号图标' />}
             placeholder='请输入账号'
             size='large'
           />
@@ -141,18 +133,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
             }
           ]}
         >
-          <Row
-            gutter={16}
-            justify='space-between'
-          >
+          <Row gutter={16} justify='space-between'>
             <Col span={15}>
               <Input
-                prefix={
-                  <img
-                    src={securityIcon}
-                    alt='账号图标'
-                  />
-                }
+                prefix={<img src={securityIcon} alt='账号图标' />}
                 placeholder='请填写验证码'
                 size='large'
                 maxLength={6}
@@ -196,12 +180,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
                 style={{ cursor: 'pointer' }}
               />
             )}
-            prefix={
-              <img
-                alt=''
-                src={pwIcon}
-              />
-            }
+            prefix={<img alt='' src={pwIcon} />}
           />
         </Form.Item>
         {/* 确认密码 */}
@@ -226,28 +205,13 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
             size='large'
             maxLength={20}
             placeholder='请再次输入新密码'
-            iconRender={visible => (
-              <img
-                alt=''
-                src={visible ? EyeTwoTone : EyeInvisibleOutlined}
-              />
-            )}
-            prefix={
-              <img
-                alt=''
-                src={pwIcon}
-              />
-            }
+            iconRender={visible => <img alt='' src={visible ? EyeTwoTone : EyeInvisibleOutlined} />}
+            prefix={<img alt='' src={pwIcon} />}
           />
         </Form.Item>
         {/* 登录按钮 */}
         <Form.Item>
-          <Button
-            type='primary'
-            htmlType='submit'
-            block
-            className='login-form-submit'
-          >
+          <Button type='primary' htmlType='submit' block className='login-form-submit'>
             重置密码
           </Button>
         </Form.Item>

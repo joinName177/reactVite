@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   // 加载环境变量
   // 对于 re 环境，需要先尝试加载 .env.re，然后 fallback 到 .env.production
   let env: Record<string, string> = {}
-  
+
   if (mode === 're') {
     // 尝试加载 .env.re 文件
     try {
@@ -34,8 +34,24 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: path.resolve(__dirname, 'dist/renderer'),
       emptyOutDir: true,
-      // 根据环境设置 sourcemap
-      sourcemap: mode === 'development',
+      // 生产环境不生成 sourcemap，减小体积和构建时间
+      sourcemap: false,
+      // 使用 esbuild 压缩（比 terser 快 10-100 倍）
+      minify: 'esbuild',
+      // 代码分割优化
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'antd-vendor': ['antd', '@ant-design/icons'],
+            'redux-vendor': ['@reduxjs/toolkit', 'react-redux']
+          }
+        }
+      },
+      // 减小 chunk 大小警告阈值
+      chunkSizeWarningLimit: 1000,
+      // 禁用压缩大小报告，加快构建速度
+      reportCompressedSize: false
     },
     server: {
       port: 5173,
@@ -50,7 +66,7 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         less: {
-          javascriptEnabled: true,
+          javascriptEnabled: true
           // 可以在这里添加全局 less 变量文件
           // additionalData: `@import "@/styles/variables.less";`
         }
@@ -58,8 +74,7 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       // 确保环境变量在构建时可用
-      'import.meta.env.VITE_APP_ENV': JSON.stringify(env.VITE_APP_ENV || mode),
+      'import.meta.env.VITE_APP_ENV': JSON.stringify(env.VITE_APP_ENV || mode)
     }
   }
 })
-
