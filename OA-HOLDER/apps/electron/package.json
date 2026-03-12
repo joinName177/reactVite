@@ -1,0 +1,25 @@
+{
+  "name": "@holder/electron",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Holder Electron 主进程",
+  "main": "../../dist/main/index.js",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rimraf ../../dist/main",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc --build --watch",
+    "start": "cross-env NODE_ENV=development electron ../../dist/main/index.js"
+  },
+  "dependencies": {
+    "@holder/shared-types": "workspace:*",
+    "@holder/ipc-bridge": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "cross-env": "^10.1.0",
+    "electron": "^39.2.7",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.9.3"
+  }
+}

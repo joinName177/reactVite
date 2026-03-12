@@ -1,0 +1,51 @@
+{
+  "name": "@holder/ui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Holder 统一 UI 组件库",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./icons": {
+      "types": "./dist/icons/index.d.ts",
+      "import": "./dist/icons/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/theme/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "import": "./dist/hooks/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rimraf dist",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc --build --watch"
+  },
+  "dependencies": {
+    "@holder/shared-types": "workspace:*",
+    "lucide-react": "^0.475.0"
+  },
+  "peerDependencies": {
+    "antd": ">=6.0.0",
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "antd": "^6.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.9.3"
+  }
+}
