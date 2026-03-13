@@ -47,7 +47,12 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '~': path.resolve(__dirname, 'src')
+        '~': path.resolve(__dirname, 'src'),
+        // 直接指向 @holder/ui 源码，避免 tsc 构建时 CSS Module 未拷贝到 dist 的问题
+        '@holder/ui/theme': path.resolve(__dirname, '../../packages/shared/ui/src/theme/index.ts'),
+        '@holder/ui/icons': path.resolve(__dirname, '../../packages/shared/ui/src/icons/index.ts'),
+        '@holder/ui/hooks': path.resolve(__dirname, '../../packages/shared/ui/src/hooks/index.ts'),
+        '@holder/ui': path.resolve(__dirname, '../../packages/shared/ui/src/index.ts'),
       }
     },
     css: {

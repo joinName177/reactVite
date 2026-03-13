@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "pnpm run build:electron && concurrently \"pnpm run dev:shell\" \"pnpm run dev:electron:watch\" \"wait-on http://localhost:5173 -t 30000 && pnpm run dev:electron:start\"",
     "dev:shell": "pnpm --filter @holder/shell dev",
+    "dev:task": "pnpm --filter @holder/module-task-manager dev",
     "dev:electron:watch": "pnpm --filter @holder/electron dev",
     "dev:electron:start": "cross-env NODE_ENV=development electron .",
     "dev:electron": "pnpm run build:electron && cross-env NODE_ENV=development electron .",

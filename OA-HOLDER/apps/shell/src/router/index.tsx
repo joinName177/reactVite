@@ -5,6 +5,7 @@ import Workdesk from '../modules/workdesk'
 import Settings from '../modules/settings'
 import NotFound from '../modules/not-found'
 import ProtectedRoute from '../components/protected-route'
+import { ModuleLoader } from './module-loader'
 
 const router = createHashRouter([
   {
@@ -26,6 +27,10 @@ const router = createHashRouter([
       {
         path: 'settings',
         element: <Settings />,
+      },
+      {
+        path: 'task',
+        element: <ModuleLoader moduleId="task-manager" />,
       },
       {
         path: '*',
