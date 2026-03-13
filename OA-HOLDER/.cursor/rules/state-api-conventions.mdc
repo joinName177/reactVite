@@ -1,0 +1,92 @@
+---
+description: 状态管理（Zustand）与 API 层规范：store 结构、命名、API class 写法
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# 状态管理与 API 规范
+
+## Zustand Store 规范
+
+### 命名
+
+- 文件名：`{domain}.store.ts`（kebab-case）
+- 导出名：`use{Domain}Store`（camelCase Hook 形式）
+
+### 结构
+
+State interface 内将**状态字段**与**操作方法**放在同一 interface，无需拆分：
+
+```typescript
+// ✅ notification.store.ts
+import { create } from 'zustand'
+import type { INotificationItem } from '@holder/shared-types'
+
+interface INotificationState {
+  notifications: INotificationItem[]
+  unreadCount: number
+
+  addNotification: (notification: INotificationItem) => void
+  markAsRead: (id: string) => void
+  clearAll: () => void
+}
+
+export const useNotificationStore = create<INotificationState>((set) => ({
+  notifications: [],
+  unreadCount: 0,
+
+  addNotification: (notification) =>
+    set((state) => ({
+      notifications: [notification, ...state.notifications],
+      unreadCount: state.unreadCount + (notification.read ? 0 : 1),
+    })),
+
+  markAsRead: (id) =>
+    set((state) => ({
+      notifications: state.notifications.map((n) =>
+        n.id === id ? { ...n, read: true } : n
+      ),
+      unreadCount: Math.max(0, state.unreadCount - 1),
+    })),
+
+  clearAll: () => set({ notifications: [], unreadCount: 0 }),
+}))
+```
+
+### 原则
+
+- Store 只放**全局/跨组件共享**的状态，局部状态用 `useState`
+- 不在 store 中直接调用 API，由组件或 hooks 负责调用后 dispatch 到 store
+- Store 文件放在 `apps/shell/src/store/` 目录
+
+---
+
+## API 层规范
+
+API 模块统一放在 `packages/shared/api/src/modules/`，使用 **Class 封装**：
+
+```typescript
+// ✅ user.api.ts
+import type { HttpClient } from '../client'
+import type { IUserInfo, IUpdateUserParams } from '@holder/shared-types'
+
+export class UserApi {
+  constructor(private client: HttpClient) {}
+
+  getById(id: string): Promise<IUserInfo> {
+    return this.client.get(`/users/${id}`)
+  }
+
+  update(params: IUpdateUserParams): Promise<IUserInfo> {
+    const { id, ...data } = params
+    return this.client.patch(`/users/${id}`, data)
+  }
+}
+```
+
+### 原则
+
+- 一个 `{Domain}Api` class 对应一个业务域
+- 方法名语义化：`getById`、`create`、`update`、`delete`、`batchUpdate`
+- 入参和返回值类型必须引用 `@holder/shared-types` 中的接口，不在 API 文件内重复定义
+- 文件名：`{domain}.api.ts`

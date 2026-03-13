@@ -1,0 +1,82 @@
+---
+description: 国际化规范：locale 文件结构、key 命名（camelCase）、禁止硬编码文案
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# 国际化（i18n）规范
+
+## 核心原则
+
+UI 中**禁止硬编码中文或英文文案**，所有用户可见文字必须通过 locale 文件管理。
+
+## Locale 文件结构
+
+每个模块在同级目录创建 `locale.ts`，key 使用 **camelCase**，值提供所有支持语言：
+
+```typescript
+// modules/user/locale.ts
+import { LanguageType } from '@holder/i18n'
+
+type L = Record<LanguageType, string>
+
+export const userLocale = {
+  // ==================== 页面标题 ====================
+  pageTitle: {
+    [LanguageType.ZhCn]: '用户管理',
+    [LanguageType.EnGb]: 'User Management',
+  } as L,
+
+  // ==================== 表单 ====================
+  nameLabel: {
+    [LanguageType.ZhCn]: '姓名',
+    [LanguageType.EnGb]: 'Name',
+  } as L,
+}
+```
+
+## Key 命名规范
+
+- 使用 **camelCase**（小驼峰）
+- 语义化，描述用途而非内容
+- 按功能分组并添加注释分隔
+
+```
+✅ accountPlaceholder、loginBtn、confirmMismatch
+❌ account_placeholder、LoginBtn、confirm_mismatch_error
+```
+
+## 组件中使用方式
+
+```typescript
+import { useI18n } from '@holder/i18n'
+import { userLocale } from './locale'
+
+const MyComponent = () => {
+  const { chooseLanguage } = useI18n()
+
+  // 用 useCallback 包裹，避免每次渲染创建新函数
+  const t = useCallback(
+    (key: keyof typeof userLocale, param?: Record<string, unknown>) =>
+      chooseLanguage({ tmpl: userLocale[key], param }),
+    [chooseLanguage],
+  )
+
+  return <button>{t('loginBtn')}</button>
+}
+```
+
+## 带变量的文案
+
+模板中使用 `{变量名}` 占位符：
+
+```typescript
+// locale.ts
+passwordMinLength: {
+  [LanguageType.ZhCn]: '密码长度至少{min}个字符',
+  [LanguageType.EnGb]: 'Password must be at least {min} characters',
+} as L,
+
+// 使用时
+t('passwordMinLength', { min: 8 })
+```

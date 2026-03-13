@@ -1,7 +1,8 @@
 import React from 'react'
 import { Spin } from 'antd'
+import styles from './page-container.module.css'
 
-interface PageContainerProps {
+interface IPageContainerProps {
   title?: string
   subtitle?: string
   extra?: React.ReactNode
@@ -11,7 +12,7 @@ interface PageContainerProps {
   style?: React.CSSProperties
 }
 
-export const PageContainer: React.FC<PageContainerProps> = ({
+export const PageContainer: React.FC<IPageContainerProps> = ({
   title,
   subtitle,
   extra,
@@ -21,23 +22,12 @@ export const PageContainer: React.FC<PageContainerProps> = ({
   style,
 }) => {
   return (
-    <div className={className} style={{ padding: 24, ...style }}>
+    <div className={`${styles.container}${className ? ` ${className}` : ''}`} style={style}>
       {(title || subtitle || extra) && (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 24,
-        }}>
+        <div className={styles.header}>
           <div>
-            {title && (
-              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>{title}</h2>
-            )}
-            {subtitle && (
-              <p style={{ margin: '4px 0 0', color: 'rgba(0,0,0,0.45)', fontSize: 14 }}>
-                {subtitle}
-              </p>
-            )}
+            {title && <h2 className={styles.title}>{title}</h2>}
+            {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
           </div>
           {extra && <div>{extra}</div>}
         </div>

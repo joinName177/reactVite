@@ -1,23 +1,18 @@
 import { create } from 'zustand'
+import { envConfig } from '~/config/env'
 
-type ThemeMode = 'light' | 'dark'
-
-interface UIState {
+interface IUIState {
   env: string
   sidebarCollapsed: boolean
-  themeMode: ThemeMode
 
   setEnv: (env: string) => void
   toggleSidebar: () => void
-  setThemeMode: (mode: ThemeMode) => void
 }
 
-export const useUIStore = create<UIState>((set) => ({
-  env: import.meta.env.VITE_APP_ENV || 'development',
+export const useUIStore = create<IUIState>((set) => ({
+  env: envConfig.env,
   sidebarCollapsed: false,
-  themeMode: 'light',
 
   setEnv: (env) => set({ env }),
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
-  setThemeMode: (mode) => set({ themeMode: mode }),
 }))

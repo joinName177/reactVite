@@ -9,13 +9,13 @@ export function useSharedState<T = unknown>(key: string, initialValue?: T) {
     const api = getElectronAPI()
     if (!api) return
 
-    api.invoke('state:get' as any, { key }).then((result: any) => {
+    api.invoke('state:get', { key }).then((result) => {
       if (result !== undefined) {
         setValue(result as T)
       }
     })
 
-    const cleanup = api.on(IpcEvent.SharedStateChanged as any, (data: any) => {
+    const cleanup = api.on(IpcEvent.SharedStateChanged, (data) => {
       if (data && typeof data === 'object' && 'key' in data && data.key === key) {
         setValue(data.value as T)
       }
@@ -28,7 +28,7 @@ export function useSharedState<T = unknown>(key: string, initialValue?: T) {
     async (newValue: T) => {
       const api = getElectronAPI()
       if (!api) return
-      await api.invoke('state:set' as any, { key, value: newValue })
+      await api.invoke('state:set', { key, value: newValue })
       setValue(newValue)
     },
     [key]

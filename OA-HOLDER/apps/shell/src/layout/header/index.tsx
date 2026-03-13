@@ -1,30 +1,36 @@
 import React, { useCallback } from 'react'
 import { Layout, Space, Avatar, Dropdown, Badge, Tag } from 'antd'
 import type { MenuProps } from 'antd'
-import { Bell, User, LogOut, Settings, Moon, Sun } from 'lucide-react'
+import { Bell, User, LogOut, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useTheme } from '@holder/ui/theme'
-import { useUserStore } from '../../store/user.store'
-import { useUIStore } from '../../store/ui.store'
+import { useI18n } from '@holder/i18n'
+import { useUserStore, useUIStore } from '~/store'
+import { headerLocale } from './locale'
+import styles from './index.module.css'
 
 const { Header } = Layout
 
 const AppHeader: React.FC = () => {
-  const { mode, toggleTheme } = useTheme()
   const navigate = useNavigate()
+  const { chooseLanguage } = useI18n()
   const userInfo = useUserStore(state => state.userInfo)
   const logout = useUserStore(state => state.logout)
   const env = useUIStore(state => state.env)
 
-  const getEnvTag = () => {
+  const t = useCallback(
+    (key: keyof typeof headerLocale) => chooseLanguage({ tmpl: headerLocale[key] }),
+    [chooseLanguage],
+  )
+
+  const getEnvTag = useCallback(() => {
     const envMap: Record<string, { color: string; text: string }> = {
       development: { color: 'blue', text: 'DEV' },
       re: { color: 'orange', text: 'RE' },
       production: { color: 'green', text: 'PROD' },
     }
-    const info = envMap[env] || { color: 'default', text: 'UNKNOWN' }
+    const info = envMap[env] ?? { color: 'default', text: 'UNKNOWN' }
     return <Tag color={info.color}>{info.text}</Tag>
-  }
+  }, [env])
 
   const handleMenuClick = useCallback<NonNullable<MenuProps['onClick']>>(
     ({ key }) => {
@@ -42,53 +48,35 @@ const AppHeader: React.FC = () => {
     {
       key: 'settings',
       icon: <Settings size={14} />,
-      label: '设置',
+      label: t('settings'),
     },
     { type: 'divider' },
     {
       key: 'logout',
       icon: <LogOut size={14} />,
-      label: '退出登录',
+      label: t('logout'),
       danger: true,
     },
   ]
 
   return (
-    <Header
-      style={{
-        padding: '0 24px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        background: mode === 'dark' ? '#141414' : '#fff',
-        borderBottom: `1px solid ${mode === 'dark' ? '#303030' : '#f0f0f0'}`,
-        height: 48,
-        lineHeight: '48px',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+    <Header className={styles.header}>
+      <div className={styles.leftSection}>
         {getEnvTag()}
       </div>
 
       <Space size={16}>
-        <span
-          onClick={toggleTheme}
-          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-        >
-          {mode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-        </span>
-
         <Badge count={0} size="small">
-          <Bell size={18} style={{ cursor: 'pointer' }} />
+          <Bell size={18} className={styles.bellIcon} />
         </Badge>
 
         <Dropdown
           menu={{ items: userMenuItems, onClick: handleMenuClick }}
           placement="bottomRight"
         >
-          <Space style={{ cursor: 'pointer' }}>
+          <Space className={styles.userMenu}>
             <Avatar size="small" icon={<User size={14} />} />
-            <span>{userInfo?.nickname || '用户'}</span>
+            <span>{userInfo?.nickname ?? t('defaultUser')}</span>
           </Space>
         </Dropdown>
       </Space>

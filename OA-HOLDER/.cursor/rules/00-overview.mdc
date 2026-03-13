@@ -1,0 +1,49 @@
+---
+description: 项目开发规范总览，列出所有规则索引，任何会话均自动加载
+alwaysApply: true
+---
+
+# OA-HOLDER 开发规范总览
+
+本项目为 Electron + React + TypeScript + Ant Design 的 Monorepo 桌面应用，使用 pnpm workspace + Turborepo 管理。
+
+## 规范索引
+
+| 规则文件 | 适用范围 | 核心内容 |
+|----------|----------|----------|
+| `coding-standards.mdc` | 全局 | 文件 ≤600 行、kebab-case 命名、高内聚低耦合、禁止 any、禁止行内样式、防重复声明、单一职责、副作用清理、竞态防护、不可变状态、禁止注释代码、禁止循环依赖、禁止硬编码 |
+| `typescript-react-standards.mdc` | `**/*.{ts,tsx}` | interface 必须以 `I` 开头、禁止 `any`、函数组件、路径别名 `~`、条件渲染安全、list key 规范、类型断言限制 |
+| `error-handling-conventions.mdc` | `**/*.{ts,tsx}` | Error Boundary 覆盖策略、异步异常统一处理、错误提示分级、IPC 错误处理 |
+| `i18n-conventions.mdc` | `**/*.{ts,tsx}` | 禁止硬编码文案、locale.ts 结构、camelCase key、`chooseLanguage` 用法 |
+| `state-api-conventions.mdc` | `**/*.{ts,tsx}` | Zustand store 结构、API class 封装规范 |
+| `import-and-types-conventions.mdc` | `**/*.{ts,tsx}` | `import type`、导入顺序、shared-types 存放约定、禁止直接访问 `import.meta.env` |
+| `git-commit-conventions.mdc` | 全局 | commit 消息格式、中文描述 |
+
+## 技术栈速查
+
+- **状态管理**：Zustand（`apps/shell/src/store/`）
+- **UI 组件**：Ant Design v6 + `@holder/ui`
+- **路由**：react-router-dom v7
+- **国际化**：`@holder/i18n`（`chooseLanguage` + `locale.ts`）
+- **HTTP 客户端**：`@holder/api`（`HttpClient` class）
+- **共享类型**：`@holder/shared-types`（`packages/shared/types/src/entities/`）
+- **路径别名**：`~` → `src/`（禁止使用 `@/`）
+- **代码质量**：Biome（`pnpm lint` / `pnpm format`）
+
+## 关键约定速记
+
+```
+interface  → 必须以 I 开头（IUserInfo、ILoginParams）
+文件名     → kebab-case（user-profile.tsx、use-auth.ts）
+样式       → CSS Module only，禁止 style={{}} 静态行内样式
+文案       → 全部走 locale.ts，禁止硬编码
+类型导入   → import type { IFoo } from '@holder/shared-types'
+环境变量   → 只从 ~/config/env 读取
+副作用     → useEffect 必须返回清理函数
+异步       → 竞态用 AbortController，catch 块必须收窄 unknown
+状态       → Zustand set 始终返回新引用，禁止 mutate
+条件渲染   → && 左侧必须是 boolean，list key 必须用稳定 ID
+类型断言   → as 必须加注释，禁止双重断言 as unknown as T
+错误       → 按严重程度分级（message / notification / Modal / ErrorBoundary）
+硬编码     → 文案走 locale、路由走 ROUTES 常量、业务值走枚举、环境值走 envConfig
+```

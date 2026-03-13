@@ -15,11 +15,11 @@ const { Text } = Typography
 const regPhone = /^1[3-9]\d{9}$/
 const regEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-interface ForgotPasswordProps {
+interface IForgotPasswordProps {
   onBack?: () => void
 }
 
-const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
+const ForgotPassword: React.FC<IForgotPasswordProps> = ({ onBack }) => {
   const { chooseLanguage } = useI18n()
   const t = useCallback(
     (key: keyof typeof loginLocale, param?: Record<string, unknown>) =>

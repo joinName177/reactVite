@@ -1,0 +1,29 @@
+.sider {
+  overflow: auto;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+}
+
+.logo {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logoExpanded {
+  font-size: 18px;
+}
+
+.logoCollapsed {
+  font-size: 16px;
+}
+
+.menu {
+  border-right: 0;
+}

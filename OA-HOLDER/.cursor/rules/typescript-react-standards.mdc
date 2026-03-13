@@ -1,0 +1,160 @@
+---
+description: TypeScript 与 React 编码规范：接口命名、严格类型、函数组件规范、条件渲染安全、key 规范、类型断言限制
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# TypeScript & React 规范
+
+## 接口类型命名
+
+所有 `interface` 定义必须以大写字母 **`I`** 开头：
+
+```typescript
+// ✅
+interface IUserInfo {
+  id: string
+  username: string
+}
+
+interface ILoginFormValues {
+  account: string
+  password: string
+}
+
+// ❌
+interface UserInfo { ... }
+interface loginFormValues { ... }
+```
+
+`type` 别名不强制要求 `I` 前缀，使用语义化名称即可。
+
+## 严格 TypeScript
+
+- 禁止使用 `any`，用 `unknown` 替代并做类型收窄
+- 函数参数与返回值必须有明确类型（推导清晰时可省略返回值）
+- 使用可选链 `?.` 和空值合并 `??` 代替手动判空
+
+```typescript
+// ✅
+const name = user?.profile?.name ?? '未知用户'
+
+// ❌
+const name = user && user.profile && user.profile.name ? user.profile.name : '未知用户'
+```
+
+## React 函数组件规范
+
+- 统一使用函数组件，禁止 class 组件
+- 组件 Props 用 `interface` 定义并以 `I` 或 `Props` 后缀命名（推荐 `I${ComponentName}Props`）
+- 使用 `useCallback` 包裹事件处理函数，避免子组件无意义重渲染
+
+```typescript
+// ✅
+interface ILoginFormProps {
+  onSubmit: (values: ILoginFormValues) => Promise<void>
+  loading?: boolean
+}
+
+const LoginForm: React.FC<ILoginFormProps> = ({ onSubmit, loading = false }) => {
+  const handleSubmit = useCallback(async (values: ILoginFormValues) => {
+    await onSubmit(values)
+  }, [onSubmit])
+
+  return <form onSubmit={handleSubmit}>...</form>
+}
+```
+
+## 路径别名
+
+使用 `~` 作为 `src` 目录别名，禁止使用 `@/`：
+
+```typescript
+// ✅
+import { useUserStore } from '~/store/user.store'
+
+// ❌
+import { useUserStore } from '@/store/user.store'
+```
+
+---
+
+## 条件渲染安全规范
+
+**禁止**使用 `&&` 短路直接渲染可能为 falsy 的数值或字符串，`0`、`''`、`NaN` 会被 React 直接输出到 DOM：
+
+```tsx
+// ❌ count=0 时页面渲染出 "0"，是高频 Bug
+{count && <Badge count={count} />}
+{list.length && <List data={list} />}
+{title && <h1>{title}</h1>}
+
+// ✅ 明确布尔化，语义清晰
+{count > 0 && <Badge count={count} />}
+{list.length > 0 && <List data={list} />}
+{!!title && <h1>{title}</h1>}
+
+// ✅ 也可用三元表达式，复杂分支时更易读
+{count > 0 ? <Badge count={count} /> : null}
+```
+
+**规则**：`&&` 左侧必须是 `boolean` 类型表达式，数字/字符串比较必须显式转为布尔值。
+
+---
+
+## List key 规范
+
+**严禁**使用数组下标（`index`）作为列表 `key`。增删元素后下标会位移，导致 React diff 错误复用 DOM 节点，引发状态错乱和闪烁：
+
+```tsx
+// ❌ 删除/插入中间项后 key 错位，触发错误的组件复用
+{list.map((item, index) => (
+  <TaskItem key={index} task={item} />
+))}
+
+// ✅ 使用业务唯一 ID
+{list.map((item) => (
+  <TaskItem key={item.id} task={item} />
+))}
+
+// ✅ 无 ID 时用稳定的复合 key（不随顺序变化）
+{tabs.map((tab) => (
+  <Tab key={tab.moduleId} tab={tab} />
+))}
+```
+
+**例外**：纯静态、永远不会增删重排的列表（如固定的 Tab 配置）可用 `index`，但需加注释说明。
+
+---
+
+## 类型断言限制
+
+`as` 断言会绕过 TypeScript 编译检查，与 `any` 同等危险。**严格限制**其使用场景：
+
+```typescript
+// ❌ 强制断言掩盖潜在的运行时错误
+const user = response.data as IUserInfo
+const el = document.querySelector('.btn') as HTMLButtonElement
+
+// ✅ 优先使用类型守卫，提供运行时保证
+function isIUserInfo(val: unknown): val is IUserInfo {
+  return (
+    typeof val === 'object' &&
+    val !== null &&
+    'id' in val &&
+    'username' in val
+  )
+}
+if (isIUserInfo(response.data)) {
+  // 此处 response.data 类型已收窄为 IUserInfo
+}
+
+// ✅ 仅在以下场景允许使用 as，且必须加注释说明原因
+// 1. 后端 API 已由契约文档保证结构
+const user = response.data as IUserInfo  // API schema: POST /auth/login 响应结构
+
+// 2. 第三方库类型不完整时的临时兜底
+const config = antdTheme.token as AntdTokenWithCustom  // antd v6 类型尚未暴露该字段
+```
+
+**双重断言（`as unknown as T`）绝对禁止**，出现即为架构问题信号，必须通过重构解决。

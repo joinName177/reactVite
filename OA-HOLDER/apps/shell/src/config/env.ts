@@ -1,4 +1,4 @@
-export interface EnvConfig {
+export interface IEnvConfig {
   env: string
   apiBaseUrl: string
   wsBaseUrl: string
@@ -6,7 +6,7 @@ export interface EnvConfig {
   debug: boolean
 }
 
-function getEnvConfig(): EnvConfig {
+function getEnvConfig(): IEnvConfig {
   const env = import.meta.env.VITE_APP_ENV || 'development'
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'
   const wsBaseUrl = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:3000'

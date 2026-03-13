@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useI18n, LanguageTypeMapping } from '@holder/i18n'
-import { useUserStore } from '../../store/user.store'
-import LoginForm from './components/LoginForm'
-import LoginLeftPanel from './components/LoginLeftPanel'
-import QrCode from './components/QrCode'
-import ForgotPassword from './components/ForgotPassword'
+import { useUserStore } from '~/store'
+import LoginForm from './components/login-form'
+import LoginLeftPanel from './components/login-left-panel'
+import QrCode from './components/qr-code'
+import ForgotPassword from './components/forgot-password'
 import styles from './index.module.css'
 import { loginLocale } from './locale'
 
@@ -13,7 +13,7 @@ import logo from '~/assets/images/login/holder_logo.svg'
 import QrIcon from '~/assets/images/login/qr_code.svg'
 import PcIcon from '~/assets/images/login/pc_code.svg'
 
-interface LoginStatus {
+interface ILoginStatus {
   isForgotPassword: boolean
   isQrLogin: boolean
   isFormLogin: boolean
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
     [chooseLanguage],
   )
 
-  const [loginStatus, setLoginStatus] = useState<LoginStatus>({
+  const [loginStatus, setLoginStatus] = useState<ILoginStatus>({
     isForgotPassword: false,
     isQrLogin: false,
     isFormLogin: true,
@@ -71,8 +71,8 @@ const Login: React.FC = () => {
   /**
    * 安全地设置登录状态（确保状态互斥）
    */
-  const setLoginStatusSafely = useCallback(
-    (updates: Partial<LoginStatus>) => {
+    const setLoginStatusSafely = useCallback(
+    (updates: Partial<ILoginStatus>) => {
       setLoginStatus(prev => {
         const next = { ...prev, ...updates }
 

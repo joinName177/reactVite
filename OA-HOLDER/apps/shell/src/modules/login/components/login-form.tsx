@@ -23,20 +23,20 @@ const { Text } = Typography
 
 // ==================== 类型定义 ====================
 
-interface AccountOption {
+interface IAccountOption {
   value: string
   label?: string
   password?: string
   rememberMe?: boolean
 }
 
-interface LoginFormValues {
+interface ILoginFormValues {
   account: string
   password: string
   rememberMe?: boolean
 }
 
-interface LoginFormProps {
+interface ILoginFormProps {
   /** 提交回调 */
   onSubmit: (values: LoginFormValues) => void | Promise<void>
   /** 忘记密码回调 */
@@ -60,7 +60,7 @@ const regEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 /**
  * 登录表单组件
  */
-const LoginForm: React.FC<LoginFormProps> = ({
+const LoginForm: React.FC<ILoginFormProps> = ({
   onSubmit,
   onForgotPassword,
   onWeChatLogin,
@@ -73,9 +73,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
     [chooseLanguage],
   )
 
-  const [form] = Form.useForm<LoginFormValues>()
+  const [form] = Form.useForm<ILoginFormValues>()
   const [submitting, setSubmitting] = useState(false)
-  const [options] = useState<AccountOption[]>([])
+  const [options] = useState<IAccountOption[]>([])
 
   const isLoading = loading || submitting
 
@@ -108,8 +108,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
     [t],
   )
 
-  const handleSubmit: FormProps<LoginFormValues>['onFinish'] = useCallback(
-    async (values: LoginFormValues) => {
+  const handleSubmit: FormProps<ILoginFormValues>['onFinish'] = useCallback(
+    async (values: ILoginFormValues) => {
       try {
         setSubmitting(true)
         await onSubmit?.(values)
@@ -125,7 +125,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   const getPasswordByAccount = useCallback(
     (account: string) => {
-      const currentItem = options?.find(item => item.value === account)
+      const currentItem = options.find(item => item.value === account)
       if (!currentItem) return
 
       form.setFieldsValue({
@@ -145,7 +145,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         return
       }
 
-      const matchedOption = options?.find(
+      const matchedOption = options.find(
         item => String(item.value).toUpperCase() === value.toUpperCase(),
       )
 
@@ -178,7 +178,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   }, [form])
 
   const filterOptions = useCallback(
-    (inputValue: string, option?: AccountOption) => {
+    (inputValue: string, option?: IAccountOption) => {
       if (!option) return false
       return String(option.value || '')
         .toUpperCase()

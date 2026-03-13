@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import type { INotificationItem } from '@holder/shared-types'
 
-interface NotificationState {
+interface INotificationState {
   notifications: INotificationItem[]
   unreadCount: number
 
@@ -12,7 +12,7 @@ interface NotificationState {
   clearAll: () => void
 }
 
-export const useNotificationStore = create<NotificationState>((set) => ({
+export const useNotificationStore = create<INotificationState>((set) => ({
   notifications: [],
   unreadCount: 0,
 

@@ -1,0 +1,13 @@
+.card {
+  border-radius: 8px;
+  max-width: 600px;
+}
+
+.row {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.dividerItem {
+  margin-top: 16px;
+}

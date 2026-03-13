@@ -24,6 +24,7 @@ export interface IIpcContract {
   'state:get': { input: { key: string }; output: unknown }
   'state:set': { input: { key: string; value: unknown }; output: void }
   'state:subscribe': { input: { key: string }; output: void }
+  'shared-state:changed': { input: void; output: { key: string; value: unknown } }
 
   'db:chatHistory': { input: { roomId: string; page: number }; output: IChatMessage[] }
 

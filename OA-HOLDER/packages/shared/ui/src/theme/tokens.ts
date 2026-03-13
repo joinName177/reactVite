@@ -82,23 +82,3 @@ export const lightTheme: ThemeConfig = {
   },
 }
 
-export const darkTheme: ThemeConfig = {
-  token: {
-    colorPrimary: tokens.colors.primary,
-    colorSuccess: tokens.colors.success,
-    colorWarning: tokens.colors.warning,
-    colorError: tokens.colors.error,
-    colorInfo: tokens.colors.info,
-    borderRadius: tokens.borderRadius.base,
-    fontSize: tokens.fontSize.base,
-    colorBgBase: '#141414',
-    colorTextBase: '#ffffffd9',
-  },
-  components: {
-    Button: {
-      colorLink: tokens.colors.primaryHover,
-      colorLinkHover: '#7986cb',
-      colorLinkActive: tokens.colors.primary,
-    },
-  },
-}

@@ -1,0 +1,83 @@
+---
+description: 导入规范与共享类型规范：import type、导入顺序、shared-types 存放约定
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# 导入规范与共享类型规范
+
+## import type
+
+纯类型导入必须使用 `import type`，避免运行时开销：
+
+```typescript
+// ✅
+import type { IUserInfo, ILoginParams } from '@holder/shared-types'
+import type { FormProps } from 'antd'
+
+// ❌
+import { IUserInfo } from '@holder/shared-types'
+```
+
+运行时值（函数、组件、常量）使用普通 `import`：
+
+```typescript
+// ✅ 值与类型可混合导入时，类型加 type 修饰
+import { create } from 'zustand'
+import { useI18n, type LanguageType } from '@holder/i18n'
+```
+
+## 导入顺序
+
+按以下顺序组织，各组之间空一行：
+
+```typescript
+// 1. 第三方库
+import React, { useCallback, useState } from 'react'
+import { Button, Form } from 'antd'
+
+// 2. Workspace 包（@holder/*）
+import type { IUserInfo } from '@holder/shared-types'
+import { useI18n } from '@holder/i18n'
+
+// 3. 项目内路径（~/）
+import { useUserStore } from '~/store'
+import styles from './index.module.css'
+
+// 4. 相对路径（同级/子级）
+import { loginLocale } from './locale'
+import LoginForm from './components/LoginForm'
+```
+
+## 共享类型存放规范
+
+**所有跨模块复用的实体类型**必须定义在 `packages/shared/types/src/entities/` 中，不在业务模块内重复定义：
+
+```
+packages/shared/types/src/
+├── entities/
+│   ├── user.ts        # IUserInfo、ILoginParams、ILoginResult
+│   ├── task.ts        # ITask、ICreateTaskParams、IUpdateTaskParams
+│   ├── message.ts     # IMessage、INotificationItem
+│   └── index.ts       # 统一 re-export
+└── common/
+    └── pagination.ts  # IPaginationParams、IPaginatedResponse、IApiResponse
+```
+
+- 实体接口：`I{EntityName}`（如 `ITask`、`IUserInfo`）
+- 请求参数：`I{Action}{Entity}Params`（如 `ICreateTaskParams`）
+- 响应类型：`I{Entity}Response` 或 `IPaginatedResponse<T>`
+- 组件内局部类型（不跨模块）可就地定义，无需放入 shared-types
+
+## 环境变量访问
+
+组件和业务代码中禁止直接使用 `import.meta.env`，统一通过 `~/config/env` 访问：
+
+```typescript
+// ✅
+import { envConfig, isDevelopment } from '~/config/env'
+const apiUrl = envConfig.apiBaseUrl
+
+// ❌
+const apiUrl = import.meta.env.VITE_API_BASE_URL
+```

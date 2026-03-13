@@ -16,7 +16,7 @@ export function useModule() {
     const api = getElectronAPI()
     if (!api) return
 
-    await api.invoke('window:open' as any, {
+    await api.invoke('window:open', {
       moduleId,
       ...options,
     })
@@ -28,7 +28,7 @@ export function useModule() {
     const api = getElectronAPI()
     if (!api) return
 
-    await api.invoke('window:close' as any, { windowId })
+    await api.invoke('window:close', { windowId })
   }, [])
 
   return { openModule, closeModule }

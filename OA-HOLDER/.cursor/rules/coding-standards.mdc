@@ -1,0 +1,451 @@
+---
+description: 通用编码规范：文件行数限制、高内聚低耦合、可读性、命名规范、防重复声明、单一职责、副作用清理、竞态防护、不可变状态、循环依赖、禁止硬编码
+alwaysApply: true
+---
+
+# 通用编码规范
+
+## 文件行数限制
+
+每个 `.ts` / `.tsx` 文件不得超过 **600 行**。超过时必须拆分：
+
+- 组件文件：将子组件、hooks、工具函数提取到独立文件
+- Store 文件：按功能域拆分成多个 store
+- 工具文件：按职责分类拆分
+
+## 命名规范
+
+文件与目录名统一使用 **kebab-case**（短横线命名）：
+
+```
+✅ user-profile.tsx
+✅ use-auth.ts
+✅ notification.store.ts
+
+❌ UserProfile.tsx
+❌ useAuth.ts
+```
+
+组件名使用 **PascalCase**，函数/变量使用 **camelCase**。
+
+## 高内聚低耦合
+
+- 一个文件只做一件事，相关逻辑放在同一模块内
+- 避免跨模块直接引用内部文件，通过 `index.ts` 暴露公共 API
+- 业务逻辑不得直接写在组件中，抽离到 hooks 或 store
+
+```typescript
+// ✅ 通过 index.ts 对外暴露
+import { useUserStore } from '~/store'
+
+// ❌ 直接引用模块内部
+import { useUserStore } from '~/store/user.store'
+```
+
+## 代码可读性
+
+- 函数/变量命名语义清晰，避免缩写
+- 复杂逻辑必须提取为具名函数，不写匿名嵌套函数
+- 避免超过 3 层的嵌套，提前 return 替代深层 if-else
+
+## 禁止使用 any 类型
+
+**严禁**使用 `any` 类型，用 `unknown` 替代并做类型收窄：
+
+```typescript
+// ✅ 用 unknown 替代，配合类型守卫收窄
+function handleError(error: unknown) {
+  if (error instanceof Error) {
+    console.error(error.message)
+  }
+}
+
+// ✅ 明确知道结构时，定义 interface
+const data = response as IUserInfo
+
+// ❌ 禁止
+function handleError(error: any) { ... }
+const result: any = await fetchData()
+api.get<any>('/users')
+```
+
+## 禁止行内样式
+
+**严禁**在 JSX 中使用 `style={{}}` 行内样式，所有样式必须通过 CSS Module 或 Antd token 管理：
+
+```tsx
+// ✅ 使用 CSS Module
+import styles from './index.module.css'
+
+<div className={styles.loginCard}>
+  <button className={styles.submitBtn}>提交</button>
+</div>
+
+// ✅ 需要动态样式时，用 className 条件拼接
+<button className={`${styles.btn} ${isActive ? styles.btnActive : ''}`}>
+
+// ✅ 仅允许例外：动态计算值无法用 CSS 表达时（如动画插值、JS 计算的 px 值）
+<div style={{ width: `${progress}%` }} />
+
+// ❌ 禁止静态行内样式
+<div style={{ color: 'red', fontSize: 14, marginTop: 8 }}>
+<button style={{ width: '100%' }}>
+```
+
+## 防重复声明
+
+**严禁**在不同文件或同一文件中对相同概念进行重复定义，所有可复用的声明必须单点定义、多处引用：
+
+### 类型/接口不得重复定义
+
+跨模块复用的实体类型统一放在 `packages/shared/types/src/entities/`，业务模块内禁止重复定义相同结构：
+
+```typescript
+// ✅ 只在 shared-types 定义一次，其他模块 import
+import type { IUserInfo } from '@holder/shared-types'
+
+// ❌ 在业务模块内重复定义相同结构
+interface UserInfo {
+  id: string
+  username: string
+}
+```
+
+### 常量/枚举不得重复定义
+
+魔法字符串、枚举值统一在 `packages/shared/types/src/enums/` 或模块顶部常量区声明，禁止在多处散落定义：
+
+```typescript
+// ✅ 集中定义后引用
+import { ModuleId } from '@holder/shared-types/enums'
+const key = ModuleId.Workdesk
+
+// ❌ 分散在各处重复硬编码
+const key = 'workdesk'   // 文件A
+const id  = 'workdesk'   // 文件B（语义相同，应复用常量）
+```
+
+### Locale key 不得重复
+
+同一语言文案在不同 `locale.ts` 中若语义相同，应抽取到公共 locale 文件（如 `packages/shared/i18n/` 下的 `common.locale.ts`），不得各自重复定义：
+
+```typescript
+// ✅ 公共文案引自 common locale
+import { commonLocale } from '@holder/i18n/common'
+t(commonLocale.confirm)
+
+// ❌ 每个模块自己定义"确认"、"取消"等通用文案
+confirm: { [LanguageType.ZhCn]: '确认', ... }   // moduleA/locale.ts
+confirm: { [LanguageType.ZhCn]: '确认', ... }   // moduleB/locale.ts
+```
+
+---
+
+## 单一职责
+
+每个文件、函数、组件只负责**一件事**，当一个单元承担多项职责时必须拆分：
+
+### 组件单一职责
+
+组件只负责渲染 UI，不包含业务请求逻辑、数据转换或复杂状态机：
+
+```typescript
+// ✅ 业务逻辑抽到 hook，组件只做渲染
+const useTaskList = () => {
+  const [list, setList] = useState<ITask[]>([])
+  const fetchTasks = useCallback(async () => { ... }, [])
+  return { list, fetchTasks }
+}
+
+const TaskList: React.FC = () => {
+  const { list, fetchTasks } = useTaskList()
+  return <ul>{list.map(item => <TaskItem key={item.id} task={item} />)}</ul>
+}
+
+// ❌ 组件内直接发请求、处理数据
+const TaskList: React.FC = () => {
+  const [list, setList] = useState([])
+  useEffect(() => {
+    fetch('/api/tasks').then(r => r.json()).then(data => {
+      setList(data.map(item => ({ ...item, label: item.name.trim() })))
+    })
+  }, [])
+  return <ul>...</ul>
+}
+```
+
+### Hook 单一职责
+
+一个 hook 只封装一个关注点，不将不相关的逻辑塞入同一 hook：
+
+```typescript
+// ✅ 职责分离：数据加载 / 表单状态 / 权限 各自独立
+const useTaskData = () => { ... }
+const useTaskForm = () => { ... }
+const useTaskPermission = () => { ... }
+
+// ❌ 一个 hook 包揽所有：请求 + 表单 + 权限校验 + 路由跳转
+const useTask = () => { /* 200 行混合逻辑 */ }
+```
+
+### 工具函数单一职责
+
+工具函数只做数据处理，不触发副作用（请求、路由跳转、弹窗）：
+
+```typescript
+// ✅ 纯函数，只做格式转换
+function formatDate(date: string): string {
+  return new Date(date).toLocaleDateString('zh-CN')
+}
+
+// ❌ 工具函数内混入副作用
+function formatAndLog(date: string): string {
+  console.log('formatting', date)      // 副作用
+  fetch('/api/log', { body: date })    // 副作用
+  return new Date(date).toLocaleDateString('zh-CN')
+}
+```
+
+---
+
+## 副作用清理
+
+`useEffect` 中创建的**定时器、订阅、IPC 监听、事件监听**，必须在清理函数中销毁。Electron 长期运行，未清理的副作用是内存泄漏的首要来源。
+
+```typescript
+// ✅ 所有副作用返回清理函数
+useEffect(() => {
+  const timer = setInterval(fetchUnreadCount, 30_000)
+  return () => clearInterval(timer)
+}, [])
+
+useEffect(() => {
+  const api = getElectronAPI()
+  if (!api) return
+  const cleanup = api.on('notification:received', handleNotification)
+  return cleanup
+}, [handleNotification])
+
+// ❌ 没有清理，组件卸载后副作用继续运行
+useEffect(() => {
+  setInterval(fetchUnreadCount, 30_000)
+}, [])
+```
+
+**判断是否需要清理的口诀**：凡是在 `useEffect` 内 `start` / `subscribe` / `addEventListener` / `api.on` 的，都必须在 return 中对应 `stop` / `unsubscribe` / `removeEventListener` / `cleanup()`。
+
+---
+
+## 异步竞态防护
+
+当组件在同一个 `useEffect` 中多次触发异步请求时（如搜索、分页切换），**必须取消过期请求**，防止后发先至的响应覆盖正确数据：
+
+```typescript
+// ✅ 用 AbortController 取消过期请求
+useEffect(() => {
+  const controller = new AbortController()
+
+  taskApi.list({ ...filters, signal: controller.signal })
+    .then(setList)
+    .catch((err) => {
+      if (err.name !== 'AbortError') throw err
+    })
+
+  return () => controller.abort()
+}, [filters])
+
+// ✅ 用 ignore flag 丢弃过期结果（API 不支持 signal 时）
+useEffect(() => {
+  let ignore = false
+  fetchData().then((data) => {
+    if (!ignore) setList(data)
+  })
+  return () => { ignore = true }
+}, [filters])
+
+// ❌ 无保护：快速切换页码时，旧请求响应可能覆盖新数据
+useEffect(() => {
+  taskApi.list(filters).then(setList)
+}, [filters])
+```
+
+---
+
+## 不可变状态原则
+
+Zustand 基于**引用比较**触发重渲染，直接 mutate 原对象会导致视图不更新。**严禁**在 `set` 回调中修改原始 state 引用：
+
+```typescript
+// ✅ 始终返回新引用
+addNotification: (item) =>
+  set((state) => ({
+    list: [item, ...state.list],
+  })),
+
+updateItem: (id, patch) =>
+  set((state) => ({
+    list: state.list.map((n) => (n.id === id ? { ...n, ...patch } : n)),
+  })),
+
+removeItem: (id) =>
+  set((state) => ({
+    list: state.list.filter((n) => n.id !== id),
+  })),
+
+// ❌ 直接 push / splice / 赋值，Zustand 检测不到变化
+addNotification: (item) =>
+  set((state) => {
+    state.list.push(item)   // 同一引用，视图不更新
+    return state
+  }),
+```
+
+对于嵌套对象，使用展开运算符或 `structuredClone` 生成新引用，禁止逐层直接赋值。
+
+---
+
+## 禁止保留注释代码
+
+已废弃的逻辑**必须删除**，不得注释后遗留在代码库中。Git 历史可追溯任何历史版本，注释代码只会增加阅读噪音并引发误解：
+
+```typescript
+// ❌ 注释代码污染文件
+// const oldApi = () => fetch('/v1/users')
+// setList(data.filter(i => i.status === 1))
+// TODO: 以后再改（超过两周未处理的 TODO 视同废弃代码）
+
+// ✅ 直接删除，如需找回查 git log
+```
+
+**例外**：`// TODO:` 注释允许保留，但必须附上 Issue 编号或负责人，且在下一个迭代周期内必须处理。
+
+---
+
+## 禁止模块循环依赖
+
+Monorepo 中各 `packages/` 之间的依赖方向必须**单向**，禁止循环引用。循环依赖会导致构建顺序不确定、热更新失效、难以 tree-shake：
+
+```
+✅ 合法依赖方向（单向流动）
+apps/shell
+  └→ packages/shared/ui
+  └→ packages/shared/api
+  └→ packages/shared/ipc-bridge
+       └→ packages/shared/types   ← 所有包的最底层，不依赖任何内部包
+
+❌ 禁止循环
+packages/shared/api  →  packages/shared/ui  →  packages/shared/api
+```
+
+**检测方式**：运行 `pnpm ls --depth 3` 或在 CI 中集成 `madge --circular` 检测。发现循环时，将共用逻辑下沉到更底层的 package（通常是 `@holder/shared-types`）解决。
+
+---
+
+## 禁止硬编码
+
+**硬编码**指将应在运行时配置、国际化或集中管理的值直接字面量写死在代码中。本项目禁止以下四类硬编码：
+
+---
+
+### 1. 禁止硬编码 UI 文案
+
+所有用户可见的字符串（中文/英文）必须通过 `locale.ts` + `chooseLanguage` 管理，详见 `i18n-conventions.mdc`：
+
+```tsx
+// ❌ 直接在 JSX 中写死文字
+<Button>提交</Button>
+<p>请输入账号</p>
+message.error('登录失败，请重试')
+
+// ✅ 通过 locale key 引用
+<Button>{t('submitBtn')}</Button>
+<p>{t('accountPlaceholder')}</p>
+message.error(t('loginError'))
+```
+
+---
+
+### 2. 禁止硬编码路由路径
+
+路由字符串散落各处会导致修改时遗漏，必须集中定义为常量后引用：
+
+```typescript
+// ✅ 集中定义路由常量，放在 ~/router/routes.ts
+export const ROUTES = {
+  LOGIN:           '/login',
+  HOME:            '/',
+  TASK:            '/task',
+  APPROVAL:        '/approval',
+  SPECIAL_PROJECT: '/special-project',
+  SETTINGS:        '/settings',
+} as const
+
+// ✅ 使用时引用常量
+navigate(ROUTES.SETTINGS)
+<Link to={ROUTES.TASK}>任务</Link>
+
+// ❌ 字符串字面量散落在各处
+navigate('/settings')
+<Link to="/task">任务</Link>
+if (location.pathname === '/special-project') { ... }
+```
+
+---
+
+### 3. 禁止硬编码业务魔法值
+
+状态码、枚举值、业务阈值等必须定义为具名常量或枚举，不得直接使用字面量：
+
+```typescript
+// ❌ 魔法数字/字符串，含义不明
+if (task.status === 2) { ... }
+if (response.code === 200) { ... }
+const MAX = 25
+
+// ✅ 使用枚举或具名常量，语义清晰
+import { TaskStatus } from '@holder/shared-types/enums'
+if (task.status === TaskStatus.InProgress) { ... }
+if (response.code === HTTP_OK) { ... }
+const ACCOUNT_MAX_LENGTH = 25
+```
+
+枚举统一放在 `packages/shared/types/src/enums/`；模块内局部常量在文件顶部常量区集中声明：
+
+```typescript
+// ✅ 文件顶部常量区
+const PASSWORD_MIN_LENGTH = 6
+const ACCOUNT_MAX_LENGTH  = 25
+const POLLING_INTERVAL_MS = 30_000
+```
+
+---
+
+### 4. 禁止硬编码配置与环境值
+
+API 地址、超时时间、功能开关等环境相关值，禁止直接写死，必须通过 `~/config/env` 统一读取：
+
+```typescript
+// ❌ 写死域名、端口、超时
+const res = await fetch('http://localhost:3000/api/users')
+const ws  = new WebSocket('ws://192.168.1.100:8080')
+setTimeout(callback, 30000)
+
+// ✅ 从 envConfig 读取
+import { envConfig } from '~/config/env'
+const res = await fetch(`${envConfig.apiBaseUrl}/users`)
+const ws  = new WebSocket(envConfig.wsBaseUrl)
+setTimeout(callback, envConfig.pollingInterval)
+```
+
+---
+
+### 硬编码速查表
+
+| 类型 | 错误示例 | 正确归属 |
+|------|----------|----------|
+| UI 文案 | `'提交'`、`'请输入'` | `locale.ts` + `chooseLanguage` |
+| 路由路径 | `'/settings'`、`'/task'` | `~/router/routes.ts` 常量 |
+| 业务状态码 | `status === 2`、`type === 'admin'` | `@holder/shared-types/enums` |
+| 数值阈值 | `maxLength={25}`、`min={6}` | 文件顶部具名常量 |
+| 环境地址 | `'http://localhost:3000'` | `~/config/env` → `envConfig` |
+| 错误信息 | `'请求失败'`、`'网关错误'` | `locale.ts` 或 `onError` 回调注入 |

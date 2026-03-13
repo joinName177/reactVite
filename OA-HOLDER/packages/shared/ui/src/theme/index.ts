@@ -1,3 +1,3 @@
-export { tokens, lightTheme, darkTheme } from './tokens'
-export { HolderConfigProvider, useTheme } from './config-provider'
+export { tokens, lightTheme } from './tokens'
+export { HolderConfigProvider } from './config-provider'
 export type { HolderTheme } from './tokens'

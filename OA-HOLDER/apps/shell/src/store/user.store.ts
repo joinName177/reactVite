@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import type { IUserInfo } from '@holder/shared-types'
 
-interface UserState {
+interface IUserState {
   userInfo: IUserInfo | null
   token: string | null
   isAuthenticated: boolean
@@ -11,7 +11,7 @@ interface UserState {
   logout: () => void
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<IUserState>((set) => ({
   userInfo: null,
   token: localStorage.getItem('token'),
   isAuthenticated: !!localStorage.getItem('token'),

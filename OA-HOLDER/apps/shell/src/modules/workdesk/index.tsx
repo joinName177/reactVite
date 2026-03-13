@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Card, Row, Col, Statistic, Typography, Space } from 'antd'
 import {
   CheckSquare,
@@ -9,28 +9,25 @@ import {
   TrendingUp,
 } from 'lucide-react'
 import { PageContainer } from '@holder/ui'
+import { useI18n } from '@holder/i18n'
+import { workdeskLocale } from './locale'
+import styles from './index.module.css'
 
 const { Title } = Typography
 
-const StatCard: React.FC<{
+interface IStatCardProps {
   title: string
   value: number
   icon: React.ReactNode
   color: string
-}> = ({ title, value, icon, color }) => (
-  <Card hoverable style={{ borderRadius: 8 }}>
+}
+
+const StatCard: React.FC<IStatCardProps> = ({ title, value, icon, color }) => (
+  <Card hoverable className={styles.statCard}>
     <Space align="start" size={16}>
       <div
-        style={{
-          width: 48,
-          height: 48,
-          borderRadius: 12,
-          background: `${color}15`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color,
-        }}
+        className={styles.statIconWrapper}
+        style={{ background: `${color}15`, color }}
       >
         {icon}
       </div>
@@ -40,12 +37,19 @@ const StatCard: React.FC<{
 )
 
 const Workdesk: React.FC = () => {
+  const { chooseLanguage } = useI18n()
+
+  const t = useCallback(
+    (key: keyof typeof workdeskLocale) => chooseLanguage({ tmpl: workdeskLocale[key] }),
+    [chooseLanguage],
+  )
+
   return (
-    <PageContainer title="工作台" subtitle="欢迎回来，这是您的工作概览">
+    <PageContainer title={t('pageTitle')} subtitle={t('pageSubtitle')}>
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={6}>
           <StatCard
-            title="待处理任务"
+            title={t('pendingTasks')}
             value={12}
             icon={<CheckSquare size={24} />}
             color="#3949AB"
@@ -53,7 +57,7 @@ const Workdesk: React.FC = () => {
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <StatCard
-            title="待审批"
+            title={t('pendingApprovals')}
             value={5}
             icon={<FileCheck size={24} />}
             color="#52c41a"
@@ -61,7 +65,7 @@ const Workdesk: React.FC = () => {
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <StatCard
-            title="未读消息"
+            title={t('unreadMessages')}
             value={28}
             icon={<MessageSquare size={24} />}
             color="#1890ff"
@@ -69,7 +73,7 @@ const Workdesk: React.FC = () => {
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <StatCard
-            title="通知公告"
+            title={t('notifications')}
             value={3}
             icon={<Bell size={24} />}
             color="#faad14"
@@ -77,29 +81,29 @@ const Workdesk: React.FC = () => {
         </Col>
       </Row>
 
-      <Title level={4} style={{ marginTop: 32 }}>快捷入口</Title>
+      <Title level={4} className={styles.sectionTitle}>{t('shortcuts')}</Title>
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={8}>
-          <Card hoverable style={{ borderRadius: 8 }}>
+          <Card hoverable className={styles.shortcutCard}>
             <Space>
               <Target size={20} />
-              <span>专项管理</span>
+              <span>{t('specialProject')}</span>
             </Space>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card hoverable style={{ borderRadius: 8 }}>
+          <Card hoverable className={styles.shortcutCard}>
             <Space>
               <TrendingUp size={20} />
-              <span>绩效管理</span>
+              <span>{t('performance')}</span>
             </Space>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card hoverable style={{ borderRadius: 8 }}>
+          <Card hoverable className={styles.shortcutCard}>
             <Space>
               <Target size={20} />
-              <span>OKR 目标</span>
+              <span>{t('okr')}</span>
             </Space>
           </Card>
         </Col>

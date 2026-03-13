@@ -8,7 +8,7 @@ import axios, {
 } from 'axios'
 import type { IApiResponse, IRequestConfig } from '@holder/shared-types'
 
-export interface HttpClientConfig {
+export interface IHttpClientConfig {
   baseURL: string
   timeout?: number
   getToken?: () => string | null
@@ -23,9 +23,9 @@ export type ResponseInterceptor = (response: AxiosResponse) => AxiosResponse
 
 export class HttpClient {
   private instance: AxiosInstance
-  private config: HttpClientConfig
+  private config: IHttpClientConfig
 
-  constructor(config: HttpClientConfig) {
+  constructor(config: IHttpClientConfig) {
     this.config = config
     this.instance = axios.create({
       baseURL: config.baseURL,
@@ -115,27 +115,27 @@ export class HttpClient {
     return status ? messages[status] || `请求失败 (${status})` : ''
   }
 
-  get<T = any>(url: string, params?: Record<string, any>, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
+  get<T = unknown>(url: string, params?: Record<string, unknown>, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
     return this.instance.get<T>(url, { params, ...config }) as Promise<T>
   }
 
-  post<T = any>(url: string, data?: any, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
+  post<T = unknown>(url: string, data?: unknown, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
     return this.instance.post<T>(url, data, config as AxiosRequestConfig) as Promise<T>
   }
 
-  put<T = any>(url: string, data?: any, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
+  put<T = unknown>(url: string, data?: unknown, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
     return this.instance.put<T>(url, data, config as AxiosRequestConfig) as Promise<T>
   }
 
-  patch<T = any>(url: string, data?: any, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
+  patch<T = unknown>(url: string, data?: unknown, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
     return this.instance.patch<T>(url, data, config as AxiosRequestConfig) as Promise<T>
   }
 
-  delete<T = any>(url: string, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
+  delete<T = unknown>(url: string, config?: IRequestConfig & AxiosRequestConfig): Promise<T> {
     return this.instance.delete<T>(url, config as AxiosRequestConfig) as Promise<T>
   }
 
-  upload<T = any>(
+  upload<T = unknown>(
     url: string,
     formData: FormData,
     config?: IRequestConfig & { onUploadProgress?: (e: AxiosProgressEvent) => void }
@@ -146,7 +146,7 @@ export class HttpClient {
     }) as Promise<T>
   }
 
-  download(url: string, params?: Record<string, any>, filename?: string): Promise<void> {
+  download(url: string, params?: Record<string, unknown>, filename?: string): Promise<void> {
     return this.instance
       .get(url, { params, responseType: 'blob' })
       .then(response => {
@@ -167,6 +167,6 @@ export class HttpClient {
   }
 }
 
-export function createHttpClient(config: HttpClientConfig): HttpClient {
+export function createHttpClient(config: IHttpClientConfig): HttpClient {
   return new HttpClient(config)
 }

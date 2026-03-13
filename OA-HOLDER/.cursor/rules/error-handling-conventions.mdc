@@ -1,0 +1,218 @@
+---
+description: 错误处理规范：Error Boundary 覆盖、异步异常统一处理、错误上报、用户提示分级
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# 错误处理规范
+
+## Error Boundary 覆盖策略
+
+React 的 Error Boundary 只能捕获**同步渲染异常**，异步（Promise、setTimeout）和事件处理器中的异常需要另行处理。
+
+### 必须包裹的位置
+
+```tsx
+// ✅ 每个业务模块入口包裹独立 ErrorBoundary，防止单模块崩溃影响整体
+<ErrorBoundary fallback={<ModuleErrorFallback />}>
+  <TaskModule />
+</ErrorBoundary>
+
+// ✅ 动态加载（Suspense）必须同时包裹 ErrorBoundary
+<ErrorBoundary fallback={<PageErrorFallback />}>
+  <Suspense fallback={<LoadingSpinner fullscreen />}>
+    <LazyPage />
+  </Suspense>
+</ErrorBoundary>
+
+// ❌ 整个应用只有一个顶层 ErrorBoundary，单模块异常会导致整页白屏
+<ErrorBoundary>
+  <App />   {/* 粒度太粗 */}
+</ErrorBoundary>
+```
+
+### ErrorBoundary 实现规范
+
+```tsx
+// ✅ 标准 ErrorBoundary 实现，放在 packages/shared/ui/src/components/error-boundary.tsx
+interface IErrorBoundaryProps {
+  fallback: React.ReactNode
+  children: React.ReactNode
+  onError?: (error: Error, info: React.ErrorInfo) => void
+}
+
+interface IErrorBoundaryState {
+  hasError: boolean
+  error: Error | null
+}
+
+class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryState> {
+  state: IErrorBoundaryState = { hasError: false, error: null }
+
+  static getDerivedStateFromError(error: Error): IErrorBoundaryState {
+    return { hasError: true, error }
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo): void {
+    this.props.onError?.(error, info)
+    // 上报到监控系统
+    reportError(error, { componentStack: info.componentStack })
+  }
+
+  render() {
+    if (this.state.hasError) return this.props.fallback
+    return this.props.children
+  }
+}
+```
+
+---
+
+## 异步异常统一处理
+
+### Hook 内的异步操作
+
+异步 hook 必须管理 `loading` 和 `error` 状态，且错误不能静默吞掉：
+
+```typescript
+// ✅ 完整的异步状态管理
+function useTaskList(filters: ITaskFilters) {
+  const [list, setList] = useState<ITask[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  const fetchList = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const data = await taskApi.list(filters)
+      setList(data)
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err))
+      setError(error)
+      // 不要在这里直接 message.error，由调用方决定如何展示
+    } finally {
+      setLoading(false)
+    }
+  }, [filters])
+
+  return { list, loading, error, fetchList }
+}
+
+// ❌ 静默吞掉错误，用户无感知，调试困难
+const fetchList = async () => {
+  try {
+    const data = await taskApi.list(filters)
+    setList(data)
+  } catch {
+    // 什么都不做
+  }
+}
+```
+
+### 事件处理器中的异步错误
+
+事件处理器（`onClick`、`onSubmit` 等）内的异步错误不会被 Error Boundary 捕获，必须显式 catch：
+
+```typescript
+// ✅ 事件处理器必须 try/catch，并给用户可读反馈
+const handleSubmit = useCallback(async (values: ILoginFormValues) => {
+  try {
+    setSubmitting(true)
+    await authApi.login(values)
+    navigate('/')
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : t('loginError')
+    message.error(msg)
+  } finally {
+    setSubmitting(false)
+  }
+}, [navigate, t])
+
+// ❌ 未处理的 Promise rejection 会导致控制台报错，用户无反馈
+const handleSubmit = async (values: ILoginFormValues) => {
+  await authApi.login(values)   // 失败时静默崩溃
+  navigate('/')
+}
+```
+
+---
+
+## 错误提示分级
+
+根据错误的严重程度和用户可操作性，选择合适的提示方式：
+
+| 级别 | 场景 | 组件 |
+|------|------|------|
+| `message.error` | 操作失败，用户可重试（表单提交、数据加载） | Antd Message |
+| `notification.error` | 后台任务失败，需用户知晓但不阻断操作 | Antd Notification |
+| `Modal.error` | 严重错误，需用户确认后才能继续 | Antd Modal |
+| `<ErrorFallback />` | 模块级渲染崩溃，整个区域不可用 | Error Boundary fallback |
+
+```typescript
+// ✅ 按严重程度分级
+// 普通操作失败 → Message（2-3秒自动消失）
+message.error(t('saveFailed'))
+
+// 后台同步失败 → Notification（用户可手动关闭）
+notification.error({
+  message: t('syncFailed'),
+  description: t('syncFailedDesc'),
+  duration: 0,   // 不自动关闭
+})
+
+// 鉴权失效 → Modal（阻断式，必须处理）
+Modal.error({
+  title: t('sessionExpired'),
+  content: t('pleaseReLogin'),
+  onOk: () => navigate('/login'),
+})
+```
+
+---
+
+## 错误类型收窄规范
+
+catch 块中的 `error` 类型为 `unknown`，必须收窄后再使用：
+
+```typescript
+// ✅ 收窄后安全访问
+} catch (err) {
+  if (err instanceof Error) {
+    console.error('[TaskApi]', err.message)
+    setErrorMsg(err.message)
+  } else {
+    console.error('[TaskApi] unknown error', err)
+    setErrorMsg(t('unknownError'))
+  }
+}
+
+// ❌ 直接访问 .message，运行时可能报错
+} catch (err) {
+  console.error(err.message)   // err 可能是字符串、数字等非 Error 类型
+}
+```
+
+---
+
+## IPC 错误处理（Electron 专项）
+
+Electron IPC 调用失败时，主进程抛出的错误会序列化后传回渲染进程，需要统一处理：
+
+```typescript
+// ✅ IPC 调用统一 try/catch，区分网络错误和业务错误
+const handleLogin = async (params: ILoginParams) => {
+  try {
+    const result = await api.invoke('auth:login', params)
+    useUserStore.getState().setUserInfo(result)
+  } catch (err) {
+    // IPC 超时或主进程崩溃
+    if (err instanceof Error && err.message.includes('timeout')) {
+      message.error(t('ipcTimeout'))
+      return
+    }
+    // 业务错误
+    message.error(err instanceof Error ? err.message : t('loginFailed'))
+  }
+}
+```
