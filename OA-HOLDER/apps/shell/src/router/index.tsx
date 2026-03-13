@@ -3,6 +3,7 @@ import AppLayout from '../layout/app-layout'
 import Login from '../modules/login'
 import Workdesk from '../modules/workdesk'
 import Settings from '../modules/settings'
+import NotFound from '../modules/not-found'
 import ProtectedRoute from '../components/protected-route'
 
 const router = createHashRouter([
@@ -26,7 +27,15 @@ const router = createHashRouter([
         path: 'settings',
         element: <Settings />,
       },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
     ],
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ])
 

@@ -20,12 +20,14 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
+      "~/*": ["src/*"],
       "@holder/shared-types": ["../../packages/shared/types/src"],
       "@holder/shared-types/*": ["../../packages/shared/types/src/*"],
       "@holder/api": ["../../packages/shared/api/src"],
       "@holder/ui": ["../../packages/shared/ui/src"],
       "@holder/ui/*": ["../../packages/shared/ui/src/*"],
+      "@holder/i18n": ["../../packages/shared/i18n/src"],
+      "@holder/i18n/*": ["../../packages/shared/i18n/src/*"],
       "@holder/ipc-bridge": ["../../packages/shared/ipc-bridge/src"],
       "@holder/ipc-bridge/*": ["../../packages/shared/ipc-bridge/src/*"]
     }

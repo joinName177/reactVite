@@ -9,7 +9,7 @@ export function getHolderViteBaseConfig(packageDir: string): Partial<UserConfig>
     base: './',
     resolve: {
       alias: {
-        '@': path.resolve(packageDir, 'src'),
+        '~': path.resolve(packageDir, 'src'),
       },
     },
     css: {

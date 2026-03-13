@@ -1,12 +1,15 @@
 import React from 'react'
 import { HolderConfigProvider } from '@holder/ui/theme'
+import { I18nProvider } from '@holder/i18n'
 import AppRouter from './router'
 
 const App: React.FC = () => {
   return (
-    <HolderConfigProvider>
-      <AppRouter />
-    </HolderConfigProvider>
+    <I18nProvider>
+      <HolderConfigProvider>
+        <AppRouter />
+      </HolderConfigProvider>
+    </I18nProvider>
   )
 }
 

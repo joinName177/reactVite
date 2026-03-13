@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Layout, Space, Avatar, Dropdown, Badge, Tag } from 'antd'
 import type { MenuProps } from 'antd'
 import { Bell, User, LogOut, Settings, Moon, Sun } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useTheme } from '@holder/ui/theme'
 import { useUserStore } from '../../store/user.store'
 import { useUIStore } from '../../store/ui.store'
@@ -10,7 +11,9 @@ const { Header } = Layout
 
 const AppHeader: React.FC = () => {
   const { mode, toggleTheme } = useTheme()
+  const navigate = useNavigate()
   const userInfo = useUserStore(state => state.userInfo)
+  const logout = useUserStore(state => state.logout)
   const env = useUIStore(state => state.env)
 
   const getEnvTag = () => {
@@ -22,6 +25,18 @@ const AppHeader: React.FC = () => {
     const info = envMap[env] || { color: 'default', text: 'UNKNOWN' }
     return <Tag color={info.color}>{info.text}</Tag>
   }
+
+  const handleMenuClick = useCallback<NonNullable<MenuProps['onClick']>>(
+    ({ key }) => {
+      if (key === 'logout') {
+        logout()
+        navigate('/login', { replace: true })
+      } else if (key === 'settings') {
+        navigate('/settings')
+      }
+    },
+    [logout, navigate],
+  )
 
   const userMenuItems: MenuProps['items'] = [
     {
@@ -67,7 +82,10 @@ const AppHeader: React.FC = () => {
           <Bell size={18} style={{ cursor: 'pointer' }} />
         </Badge>
 
-        <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+        <Dropdown
+          menu={{ items: userMenuItems, onClick: handleMenuClick }}
+          placement="bottomRight"
+        >
           <Space style={{ cursor: 'pointer' }}>
             <Avatar size="small" icon={<User size={14} />} />
             <span>{userInfo?.nickname || '用户'}</span>

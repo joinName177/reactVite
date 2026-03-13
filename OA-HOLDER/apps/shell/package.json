@@ -16,6 +16,7 @@
     "@holder/shared-types": "workspace:*",
     "@holder/api": "workspace:*",
     "@holder/ui": "workspace:*",
+    "@holder/i18n": "workspace:*",
     "@holder/ipc-bridge": "workspace:*",
     "@ant-design/icons": "^6.1.0",
     "antd": "^6.1.1",

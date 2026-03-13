@@ -9,13 +9,15 @@ import {
   AutoComplete,
 } from 'antd'
 import type { FormProps } from 'antd'
+import { useI18n } from '@holder/i18n'
 import styles from '../index.module.css'
+import { loginLocale } from '../locale'
 
-import weChatIcon from '@/assets/images/login/weChatLoginIn.png'
-import userIcon from '@/assets/images/login/username.png'
-import pwIcon from '@/assets/images/login/password.png'
-import EyeTwoTone from '@/assets/images/login/password_eye.png'
-import EyeInvisibleOutlined from '@/assets/images/login/password_eye_invisible.png'
+import weChatIcon from '~/assets/images/login/weChatLoginIn.png'
+import userIcon from '~/assets/images/login/username.png'
+import pwIcon from '~/assets/images/login/password.png'
+import EyeTwoTone from '~/assets/images/login/password_eye.png'
+import EyeInvisibleOutlined from '~/assets/images/login/password_eye_invisible.png'
 
 const { Text } = Typography
 
@@ -64,6 +66,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onWeChatLogin,
   loading = false,
 }) => {
+  const { chooseLanguage } = useI18n()
+  const t = useCallback(
+    (key: keyof typeof loginLocale, param?: Record<string, unknown>) =>
+      chooseLanguage({ tmpl: loginLocale[key], param }),
+    [chooseLanguage],
+  )
+
   const [form] = Form.useForm<LoginFormValues>()
   const [submitting, setSubmitting] = useState(false)
   const [options] = useState<AccountOption[]>([])
@@ -72,29 +81,31 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
   const accountRules = useMemo(
     () => [
-      { required: true, message: '请输入账号' },
+      { required: true, message: t('accountRequired') },
       {
         validator: (_: unknown, value: string) => {
           if (!value) return Promise.resolve()
           if (regPhone.test(value) || regEmail.test(value)) {
             return Promise.resolve()
           }
-          return Promise.reject(new Error('请输入正确的手机号码或邮箱'))
+          return Promise.reject(new Error(t('accountInvalid')))
         },
       },
     ],
-    [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [t],
   )
 
   const passwordRules = useMemo(
     () => [
-      { required: true, message: '请输入密码' },
+      { required: true, message: t('passwordRequired') },
       {
         min: PASSWORD_MIN_LENGTH,
-        message: `密码长度至少${PASSWORD_MIN_LENGTH}个字符`,
+        message: t('passwordMinLength', { min: PASSWORD_MIN_LENGTH }),
       },
     ],
-    [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [t],
   )
 
   const handleSubmit: FormProps<LoginFormValues>['onFinish'] = useCallback(
@@ -103,13 +114,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
         setSubmitting(true)
         await onSubmit?.(values)
       } catch (error) {
-        message.error('登录失败，请重试')
+        message.error(t('loginError'))
         console.error('登录错误:', error)
       } finally {
         setSubmitting(false)
       }
     },
-    [onSubmit],
+    [onSubmit, t],
   )
 
   const getPasswordByAccount = useCallback(
@@ -180,7 +191,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
     <div className={styles.loginForm}>
       {/* 表单标题 */}
       <Text className={styles.loginPageTitle} type="secondary">
-        账号密码登录
+        {t('formTitle')}
       </Text>
       <Form
         form={form}
@@ -203,7 +214,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           >
             <Input
               prefix={<img src={userIcon} alt="账号图标" />}
-              placeholder="请输入账号"
+              placeholder={t('accountPlaceholder')}
               size="large"
               maxLength={ACCOUNT_MAX_LENGTH}
               onChange={e => handleAccountChange(e.target.value)}
@@ -222,7 +233,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               />
             )}
             prefix={<img alt="" src={pwIcon} />}
-            placeholder="请输入登录密码"
+            placeholder={t('passwordPlaceholder')}
           />
         </Form.Item>
 
@@ -230,7 +241,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <Form.Item>
           <div className={styles.loginFormOptions}>
             <Form.Item name="rememberMe" valuePropName="checked" noStyle>
-              <Checkbox disabled={isLoading}>记住密码</Checkbox>
+              <Checkbox disabled={isLoading}>{t('rememberMe')}</Checkbox>
             </Form.Item>
             <Button
               type="link"
@@ -238,7 +249,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               disabled={isLoading}
               onClick={onForgotPassword}
             >
-              忘记密码
+              {t('forgotPassword')}
             </Button>
           </div>
         </Form.Item>
@@ -252,7 +263,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             loading={isLoading}
             className={styles.loginFormSubmit}
           >
-            登录
+            {t('loginBtn')}
           </Button>
         </Form.Item>
 

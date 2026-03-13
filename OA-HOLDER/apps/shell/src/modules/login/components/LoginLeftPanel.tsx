@@ -3,12 +3,12 @@ import Clock from './Clock'
 import AnimatedAnt from './AnimatedAnt'
 import styles from '../index.module.css'
 
-import loginBgPart1 from '@/assets/images/login/login_bg_part1.png'
-import loginBgPart2 from '@/assets/images/login/login_bg_part2.png'
-import loginBgPart3 from '@/assets/images/login/login_bg_part3.png'
-import loginBgPart4 from '@/assets/images/login/login_bg_part4.png'
-import loginBgAnt1 from '@/assets/images/login/login_bg_ant1.png'
-import loginBgAnt2 from '@/assets/images/login/login_bg_ant2.png'
+import loginBgPart1 from '~/assets/images/login/login_bg_part1.png'
+import loginBgPart2 from '~/assets/images/login/login_bg_part2.png'
+import loginBgPart3 from '~/assets/images/login/login_bg_part3.png'
+import loginBgPart4 from '~/assets/images/login/login_bg_part4.png'
+import loginBgAnt1 from '~/assets/images/login/login_bg_ant1.png'
+import loginBgAnt2 from '~/assets/images/login/login_bg_ant2.png'
 
 /**
  * 登录页面左侧装饰面板

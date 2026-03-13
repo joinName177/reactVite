@@ -1,15 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useI18n, LanguageTypeMapping } from '@holder/i18n'
 import { useUserStore } from '../../store/user.store'
 import LoginForm from './components/LoginForm'
 import LoginLeftPanel from './components/LoginLeftPanel'
 import QrCode from './components/QrCode'
 import ForgotPassword from './components/ForgotPassword'
 import styles from './index.module.css'
+import { loginLocale } from './locale'
 
-import logo from '@/assets/images/login/holder_logo.svg'
-import QrIcon from '@/assets/images/login/qr_code.svg'
-import PcIcon from '@/assets/images/login/pc_code.svg'
+import logo from '~/assets/images/login/holder_logo.svg'
+import QrIcon from '~/assets/images/login/qr_code.svg'
+import PcIcon from '~/assets/images/login/pc_code.svg'
 
 interface LoginStatus {
   isForgotPassword: boolean
@@ -24,6 +26,12 @@ const Login: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { isAuthenticated, setToken, setUserInfo } = useUserStore()
+  const { chooseLanguage, language, setLanguage } = useI18n()
+
+  const t = useCallback(
+    (key: keyof typeof loginLocale) => chooseLanguage({ tmpl: loginLocale[key] }),
+    [chooseLanguage],
+  )
 
   const [loginStatus, setLoginStatus] = useState<LoginStatus>({
     isForgotPassword: false,
@@ -112,6 +120,19 @@ const Login: React.FC = () => {
       <span className={styles.holderBg2} />
       <span className={styles.holderBgTopRig} />
 
+      {/* 语言切换器 */}
+      <div className={styles.languageSwitcher}>
+        {LanguageTypeMapping.map(item => (
+          <button
+            key={item.value}
+            className={`${styles.langBtn} ${language === item.value ? styles.langBtnActive : ''}`}
+            onClick={() => setLanguage(item.value)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
       {/* 登录卡片 */}
       <div className={styles.loginCard}>
         {/* 左侧装饰面板 */}
@@ -124,7 +145,7 @@ const Login: React.FC = () => {
             <div className={styles.qrCodeSwitch} onClick={handleQrCodeSwitch}>
               <img
                 src={loginStatus.isQrLogin ? PcIcon : QrIcon}
-                alt={loginStatus.isQrLogin ? '切换到PC登录' : '切换到二维码登录'}
+                alt={loginStatus.isQrLogin ? t('switchToPc') : t('switchToQr')}
               />
             </div>
           )}
