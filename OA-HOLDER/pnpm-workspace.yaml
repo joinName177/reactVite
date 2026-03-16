@@ -1,7 +1,0 @@
-# OA-HOLDER Monorepo 工作区配置
-# 基于 architecture-redesign-plan.md 架构设计
-packages:
-  - 'apps/*'
-  - 'packages/shared/*'
-  - 'packages/modules/*'
-  - 'packages/tools/*'
