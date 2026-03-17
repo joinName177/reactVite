@@ -1,0 +1,139 @@
+---
+description: 官网项目模块化开发规范
+alwaysApply: true
+---
+
+# 官网项目模块化开发规范
+
+## 核心原则
+
+⚠️ **禁止直接在 `index.html` 添加新功能代码**
+
+所有新功能必须按照功能分类到对应的模块文件中，`index.html` 只保留必要的结构和引用。
+
+---
+
+## 文件组织规则
+
+### HTML 内容 → `sections/`
+
+新增或修改页面内容时，必须在 `sections/` 目录下的对应文件中操作：
+
+```
+sections/
+  ├── nav.html           # 导航栏
+  ├── hero.html          # 首屏
+  ├── logic.html         # 逻辑模块介绍
+  ├── liberation.html    # 解放部分
+  ├── features.html      # 功能特性
+  ├── performance.html   # 性能展示
+  ├── co-creation.html   # 共创生态
+  ├── deployment.html    # 部署方案
+  └── footer.html        # 页脚
+```
+
+**示例**：
+- ❌ 在 `index.html` 直接添加新的 section
+- ✅ 在 `sections/features.html` 添加新功能卡片
+
+---
+
+### CSS 样式 → `styles/`
+
+样式代码必须放在对应的 CSS 文件中：
+
+```
+styles/
+  ├── variables.css    # CSS 变量、设计令牌
+  ├── base.css         # 基础样式、字体、动效系统
+  ├── components.css   # 组件样式（按钮、卡片等）
+  ├── sections.css     # 区块特定样式
+  ├── animations.css   # 动画关键帧
+  └── engine.css       # 引擎效果样式
+```
+
+**示例**：
+- ❌ 在 `index.html` 添加 `<style>` 标签
+- ✅ 在 `styles/components.css` 添加新组件样式
+- ✅ 在 `styles/variables.css` 添加新的 CSS 变量
+
+---
+
+### JavaScript 逻辑 → `scripts/`
+
+所有脚本逻辑放在 `scripts/` 目录：
+
+```
+scripts/
+  └── main.js    # 主要交互逻辑、动画初始化
+```
+
+**示例**：
+- ❌ 在 `index.html` 添加 `<script>` 标签内的代码
+- ✅ 在 `scripts/main.js` 添加新的交互函数
+
+---
+
+## `index.html` 只允许包含
+
+✅ 允许的内容：
+- `<head>` 中的 meta 标签、外部资源引用
+- CSS 文件引用：`<link rel="stylesheet" href="styles/...">`
+- JS 文件引用：`<script src="scripts/..."></script>`
+- 第三方库引用（CDN）
+- Section 占位符：`<div id="section-name"></div>`（如果使用动态加载）
+
+❌ 禁止的内容：
+- 内联 `<style>` 标签（超过 5 行）
+- 内联 `<script>` 标签（超过 5 行）
+- 大段的 HTML 内容（应该在 sections/ 中）
+
+---
+
+## 开发工作流
+
+1. **添加新功能**：
+   ```bash
+   # 1. 编辑对应的模块文件
+   vim sections/hero.html      # 修改内容
+   vim styles/components.css   # 添加样式
+   vim scripts/main.js         # 添加逻辑
+   
+   # 2. 使用构建脚本合并（自动）
+   # 部署脚本会自动调用 build.py
+   
+   # 3. 一键部署
+   ./deploy_to_cloud.sh
+   ```
+
+2. **修改现有功能**：
+   - 先确定功能所在的模块文件
+   - 在对应文件中修改
+   - 不要在 `index.html` 直接改
+
+3. **紧急修复**：
+   - 如果确实需要在 `index.html` 快速修复
+   - 修复后立即提取到对应模块文件
+   - 运行 `build.py` 重新生成
+
+---
+
+## 构建系统
+
+项目使用 `build.py` 将模块文件合并为最终的 `index.html`：
+
+```bash
+python3 build.py  # 从 sections/ 重新生成 index.html
+```
+
+**注意**：部署脚本 `deploy_to_cloud.sh` 会自动调用构建，无需手动执行。
+
+---
+
+## 违规检查
+
+如果发现以下情况，应该重构：
+
+- ⚠️ `index.html` 文件超过 2000 行
+- ⚠️ `index.html` 中有超过 10 行的 `<style>` 或 `<script>` 块
+- ⚠️ 新功能直接写在 `index.html` 而不是模块文件
