@@ -8,7 +8,7 @@ export {
   RefreshCw, RotateCw, Move, GripVertical,
 } from 'lucide-react'
 
-// ── 文件与文�?──
+// ── 文件与文档──
 export {
   File, FileText, FilePlus, FileCheck, FileX,
   FolderOpen, FolderPlus, FolderClosed,
@@ -21,14 +21,14 @@ export {
   Send, Phone, Video, Mic, MicOff, Volume2, VolumeX,
 } from 'lucide-react'
 
-// ── 用户与权�?──
+// ── 用户与权限──
 export {
   User, UserPlus, UserMinus, UserCheck, Users,
   Shield, ShieldCheck, Lock, Unlock, Key,
   LogIn, LogOut,
 } from 'lucide-react'
 
-// ── 日程与时�?──
+// ── 日程与时间──
 export {
   Calendar, CalendarDays, CalendarPlus, CalendarCheck,
   Clock, Timer, History, Hourglass,
@@ -43,7 +43,7 @@ export {
   GitBranch, GitMerge, Workflow,
 } from 'lucide-react'
 
-// ── 数据与图�?──
+// ── 数据与图表──
 export {
   BarChart3, BarChart2, TrendingUp, TrendingDown,
   PieChart, LineChart, Activity,
@@ -56,7 +56,7 @@ export {
   Maximize2, Minimize2, Fullscreen,
 } from 'lucide-react'
 
-// ── 系统与状�?──
+// ── 系统与状态──
 export {
   Settings, Cog, SlidersHorizontal,
   AlertCircle, AlertTriangle, Info, HelpCircle,
@@ -66,7 +66,7 @@ export {
   Power, Monitor, Smartphone,
 } from 'lucide-react'
 
-// ── 富文本编�?──
+// ── 富文本编辑──
 export {
   Bold, Italic, Underline, Strikethrough,
   AlignLeft, AlignCenter, AlignRight, AlignJustify,

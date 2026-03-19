@@ -340,6 +340,14 @@
   color: rgba(0, 0, 0, 0.45);
 }
 
+.loginFormInputIcon {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.loginFormIconClickable {
+  cursor: pointer;
+}
+
 /* 记住密码和忘记密码选项 */
 .loginFormOptions {
   display: flex;

@@ -1,0 +1,40 @@
+/**
+ * 显式导出配置，避免 EAS Build 解析插件失败
+ */
+module.exports = {
+  expo: {
+    name: "KidEnglishCards",
+    slug: "KidEnglishCards",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/icon.png",
+    splash: {
+      image: "./assets/splash-icon.png",
+      resizeMode: "contain",
+      backgroundColor: "#ffffff",
+    },
+    ios: {
+      supportsTablet: true,
+    },
+    android: {
+      minSdkVersion: 21,
+      adaptiveIcon: {
+        backgroundColor: "#E6F4FE",
+        foregroundImage: "./assets/android-icon-foreground.png",
+        backgroundImage: "./assets/android-icon-background.png",
+        monochromeImage: "./assets/android-icon-monochrome.png",
+      },
+      predictiveBackGestureEnabled: false,
+      package: "com.czq_zxh_199411.KidEnglishCards",
+    },
+    web: {
+      favicon: "./assets/favicon.png",
+    },
+    extra: {
+      eas: {
+        projectId: "99ca02fe-9bf3-4fd4-abb6-b88a69054331",
+      },
+    },
+    plugins: [],
+  },
+};

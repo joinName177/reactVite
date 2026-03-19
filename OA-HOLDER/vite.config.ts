@@ -53,7 +53,6 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, 'src/renderer'),
         '~': path.resolve(__dirname, 'src/renderer'),
         '@shared': sharedPath,
         '@shared/types': path.join(sharedPath, 'types'),

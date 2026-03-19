@@ -13,11 +13,8 @@ import { useI18n } from '@shared/i18n'
 import styles from '../index.module.css'
 import { loginLocale } from '../locale'
 
+import { User, Lock, Eye, EyeOff } from '@shared/ui/icons'
 import weChatIcon from '~/assets/images/login/weChatLoginIn.png'
-import userIcon from '~/assets/images/login/username.png'
-import pwIcon from '~/assets/images/login/password.png'
-import EyeTwoTone from '~/assets/images/login/password_eye.png'
-import EyeInvisibleOutlined from '~/assets/images/login/password_eye_invisible.png'
 
 const { Text } = Typography
 
@@ -211,7 +208,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({
             onKeyUp={handleKeyUp}
           >
             <Input
-              prefix={<img src={userIcon} alt="" />}
+              prefix={<User size={18} className={styles.loginFormInputIcon} />}
               placeholder={t('accountPlaceholder')}
               size="large"
               maxLength={ACCOUNT_MAX_LENGTH}
@@ -223,14 +220,14 @@ const LoginForm: React.FC<ILoginFormProps> = ({
         {/* 密码输入 */}
         <Form.Item name="password" rules={passwordRules}>
           <Input.Password
-            iconRender={visible => (
-              <img
-                alt=""
-                src={visible ? EyeTwoTone : EyeInvisibleOutlined}
-                style={{ cursor: 'pointer' }}
-              />
-            )}
-            prefix={<img alt="" src={pwIcon} />}
+            iconRender={visible =>
+              visible ? (
+                <Eye size={18} className={styles.loginFormIconClickable} />
+              ) : (
+                <EyeOff size={18} className={styles.loginFormIconClickable} />
+              )
+            }
+            prefix={<Lock size={18} className={styles.loginFormInputIcon} />}
             placeholder={t('passwordPlaceholder')}
           />
         </Form.Item>

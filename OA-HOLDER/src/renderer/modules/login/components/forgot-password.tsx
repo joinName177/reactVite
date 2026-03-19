@@ -4,10 +4,7 @@ import { useI18n } from '@shared/i18n'
 import styles from '../index.module.css'
 import { loginLocale } from '../locale'
 
-import userIcon from '~/assets/images/login/username.png'
-import pwIcon from '~/assets/images/login/password.png'
-import EyeTwoTone from '~/assets/images/login/password_eye.png'
-import EyeInvisibleOutlined from '~/assets/images/login/password_eye_invisible.png'
+import { User, Lock, Eye, EyeOff } from '@shared/ui/icons'
 import securityIcon from '~/assets/images/login/security code_icon.png'
 
 const { Text } = Typography
@@ -108,7 +105,7 @@ const ForgotPassword: React.FC<IForgotPasswordProps> = ({ onBack }) => {
           }}
         >
           <Input
-            prefix={<img src={userIcon} alt="账号" />}
+            prefix={<User size={18} className={styles.loginFormInputIcon} />}
             placeholder={t('accountPlaceholder')}
             size="large"
           />
@@ -160,14 +157,14 @@ const ForgotPassword: React.FC<IForgotPasswordProps> = ({ onBack }) => {
             maxLength={20}
             placeholder={t('newPasswordPlaceholder')}
             size="large"
-            iconRender={visible => (
-              <img
-                alt=""
-                src={visible ? EyeTwoTone : EyeInvisibleOutlined}
-                style={{ cursor: 'pointer' }}
-              />
-            )}
-            prefix={<img alt="" src={pwIcon} />}
+            iconRender={visible =>
+              visible ? (
+                <Eye size={18} className={styles.loginFormIconClickable} />
+              ) : (
+                <EyeOff size={18} className={styles.loginFormIconClickable} />
+              )
+            }
+            prefix={<Lock size={18} className={styles.loginFormInputIcon} />}
           />
         </Form.Item>
 
@@ -189,10 +186,14 @@ const ForgotPassword: React.FC<IForgotPasswordProps> = ({ onBack }) => {
             size="large"
             maxLength={20}
             placeholder={t('confirmPlaceholder')}
-            iconRender={visible => (
-              <img alt="" src={visible ? EyeTwoTone : EyeInvisibleOutlined} />
-            )}
-            prefix={<img alt="" src={pwIcon} />}
+            iconRender={visible =>
+              visible ? (
+                <Eye size={18} className={styles.loginFormIconClickable} />
+              ) : (
+                <EyeOff size={18} className={styles.loginFormIconClickable} />
+              )
+            }
+            prefix={<Lock size={18} className={styles.loginFormInputIcon} />}
           />
         </Form.Item>
 

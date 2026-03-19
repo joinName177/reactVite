@@ -1,0 +1,24 @@
+# 减小 EAS 构建上传体积，排除不必要的文件
+# 参考: https://docs.expo.dev/build-reference/easignore/
+
+node_modules/
+.git/
+.expo/
+dist/
+web-build/
+*.tsbuildinfo
+.metro-health-check*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.DS_Store
+*.pem
+.env*.local
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
