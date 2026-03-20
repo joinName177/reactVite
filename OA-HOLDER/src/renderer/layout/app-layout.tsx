@@ -1,23 +1,19 @@
-import React from 'react'
-import { Layout } from 'antd'
-import { Outlet } from 'react-router-dom'
-import AppSidebar from './sidebar'
-import AppHeader from './header'
+import { Outlet } from 'react-router-dom';
+import styles from './app-layout.module.css';
+import AppHeader from './header';
 
-const { Content } = Layout
-
-const AppLayout: React.FC = () => {
+const AppLayout = () => {
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <AppSidebar />
-      <Layout>
-        <AppHeader />
-        <Content style={{ padding: 24, overflow: 'auto' }}>
+    <div className={styles.shell}>
+      <AppHeader />
+      <div className={styles.body}>
+        <aside className={styles.left} aria-label="侧栏" />
+        <main className={styles.main}>
           <Outlet />
-        </Content>
-      </Layout>
-    </Layout>
-  )
-}
+        </main>
+      </div>
+    </div>
+  );
+};
 
-export default AppLayout
+export default AppLayout;
