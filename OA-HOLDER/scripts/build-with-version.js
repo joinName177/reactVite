@@ -5,9 +5,12 @@
  * 读取 package.json 中的版本号，并传递给 electron-builder
  */
 
-const { execSync } = require('child_process')
-const fs = require('fs')
-const path = require('path')
+import { execSync } from 'node:child_process'
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // 读取 package.json
 const packageJsonPath = path.join(__dirname, '..', 'package.json')
@@ -33,7 +36,8 @@ if (fs.existsSync(outputDirPath)) {
     fs.rmSync(outputDirPath, { recursive: true, force: true })
     console.log(`✅ 清理完成`)
   } catch (error) {
-    console.warn(`⚠️  清理目录失败: ${error.message}`)
+    const message = error instanceof Error ? error.message : String(error)
+    console.warn(`⚠️  清理目录失败: ${message}`)
   }
 }
 
@@ -72,7 +76,7 @@ try {
   // 清理临时配置文件
   try {
     fs.unlinkSync(tempConfigPath)
-  } catch (e) {
+  } catch {
     // 忽略删除失败的错误
   }
 
@@ -81,10 +85,11 @@ try {
   // 清理临时配置文件
   try {
     fs.unlinkSync(tempConfigPath)
-  } catch (e) {
+  } catch {
     // 忽略删除失败的错误
   }
 
-  console.error('\n❌ 打包失败:', error.message)
+  const message = error instanceof Error ? error.message : String(error)
+  console.error('\n❌ 打包失败:', message)
   process.exit(1)
 }
